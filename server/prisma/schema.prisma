@@ -25,15 +25,19 @@ model Team {
 model User {
   id           Int           @id @default(autoincrement())
   name         String
-  team         Team          @relation(fields: [teamId], references: [id])
+  team         Team          @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId       Int
   coinEarnings CoinEarning[]
+
+  @@index([teamId])
 }
 
 model CoinEarning {
   id     Int      @id @default(autoincrement())
   amount Int
-  user   User     @relation(fields: [userId], references: [id])
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
   date   DateTime @default(now())
+
+  @@index([userId, date])
 }

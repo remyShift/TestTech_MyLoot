@@ -4,6 +4,25 @@ import { TeamStatsRepository } from '@/repositories/teamStatsRepository';
 
 describe('TeamStatsService', () => {
 	describe('getRawStatsForTeam', () => {
+		it('should throw an error if teamId is not a positive integer', async () => {
+			class FakeRepo implements TeamStatsRepository {
+				async getTeamMembers() {
+					return [];
+				}
+			}
+
+			const service = new TeamStatsService(new FakeRepo());
+			await expect(service.getRawStatsForTeam(-1)).rejects.toThrow(
+				'Team ID must be a positive integer'
+			);
+			await expect(service.getSortedStatsForTeam(-1)).rejects.toThrow(
+				'Team ID must be a positive integer'
+			);
+			await expect(service.getStatsForTeam(-1)).rejects.toThrow(
+				'Team ID must be a positive integer'
+			);
+		});
+
 		it('should return 0 total and empty members if team has no users', async () => {
 			class FakeRepo implements TeamStatsRepository {
 				async getTeamMembers() {
