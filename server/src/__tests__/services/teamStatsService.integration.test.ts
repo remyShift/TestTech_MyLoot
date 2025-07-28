@@ -1,7 +1,7 @@
 import { testPrisma } from '@/__tests__/setup-env';
 import { PrismaTeamStatsRepository } from '@/repositories/teamStatsRepository';
 import { TeamStatsService } from '@/services/teamStatsService';
-import { beforeEach, describe, it, expect } from '@jest/globals';
+import { beforeEach, describe, expect, it } from '@jest/globals';
 
 describe('TeamStatsService integration', () => {
 	beforeEach(async () => {
@@ -10,15 +10,23 @@ describe('TeamStatsService integration', () => {
 		await testPrisma.team.deleteMany();
 	});
 
-	it('should return empty stats when no users', async () => {
+	it('should return an error when team does not exist', async () => {
+		const repo = new PrismaTeamStatsRepository(testPrisma);
+		const service = new TeamStatsService(repo);
+
+		await expect(service.getStatsForTeam(1)).rejects.toThrow(
+			`Error: Team with id 1 doesn't exist`
+		);
+	});
+
+	it('should return an error when team has no users', async () => {
 		const team = await testPrisma.team.create({ data: { name: 'Blue' } });
 		const repo = new PrismaTeamStatsRepository(testPrisma);
 		const service = new TeamStatsService(repo);
 
-		const stats = await service.getStatsForTeam(team.id);
-
-		expect(stats.total).toBe(0);
-		expect(stats.members).toEqual([]);
+		await expect(service.getStatsForTeam(team.id)).rejects.toThrow(
+			`Error: No users found for team ${team.id}`
+		);
 	});
 
 	it('should sort and calculate total and percentages correctly when team has users with earnings', async () => {

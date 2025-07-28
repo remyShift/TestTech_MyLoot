@@ -21,6 +21,10 @@ export class PrismaTeamStatsRepository implements TeamStatsRepository {
 			},
 		});
 
+		if (users.length === 0) {
+			throw new Error(`Error: No users found for team ${teamId}`);
+		}
+
 		return users.map((user: User) => {
 			const { coinEarnings, ...userWithoutEarnings } = user;
 
