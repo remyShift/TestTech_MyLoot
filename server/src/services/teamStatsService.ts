@@ -1,4 +1,5 @@
 import { UserWithStats, UserWithStatsAndPercent } from '@/types/models';
+import { TeamStatsRepository } from '@/repositories/teamStatsRepository';
 
 interface TeamStats {
 	total: number;
@@ -8,10 +9,6 @@ interface TeamStats {
 interface TeamStatsWithPercent {
 	total: number;
 	members: UserWithStatsAndPercent[];
-}
-
-export interface TeamStatsRepository {
-	getTeamMembers(teamId: number): Promise<UserWithStats[]>;
 }
 
 export class TeamStatsService {

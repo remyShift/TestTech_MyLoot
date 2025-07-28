@@ -1,8 +1,6 @@
 import { describe, it, expect } from '@jest/globals';
-import {
-	TeamStatsService,
-	TeamStatsRepository,
-} from '@/services/teamStatsService';
+import { TeamStatsService } from '@/services/teamStatsService';
+import { TeamStatsRepository } from '@/repositories/teamStatsRepository';
 
 describe('TeamStatsService', () => {
 	describe('getRawStatsForTeam', () => {
