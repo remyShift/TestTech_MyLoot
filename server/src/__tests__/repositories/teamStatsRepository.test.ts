@@ -5,6 +5,8 @@ import { expect, describe, it, beforeEach } from '@jest/globals';
 describe('PrismaTeamStatsRepository', () => {
 	describe('getTeamMembers', () => {
 		beforeEach(async () => {
+			await testPrisma.coinEarning.deleteMany();
+			await testPrisma.user.deleteMany();
 			await testPrisma.team.deleteMany();
 
 			await testPrisma.$executeRaw`ALTER SEQUENCE "Team_id_seq" RESTART WITH 1`;

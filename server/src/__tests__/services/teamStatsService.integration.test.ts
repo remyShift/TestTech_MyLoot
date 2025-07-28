@@ -5,6 +5,8 @@ import { beforeEach, describe, expect, it } from '@jest/globals';
 
 describe('TeamStatsService integration', () => {
 	beforeEach(async () => {
+		await testPrisma.coinEarning.deleteMany();
+		await testPrisma.user.deleteMany();
 		await testPrisma.team.deleteMany();
 
 		await testPrisma.$executeRaw`ALTER SEQUENCE "Team_id_seq" RESTART WITH 1`;
