@@ -27,6 +27,7 @@ describe('TeamStatsService integration', () => {
 		const result = await service.getStatsForTeam(team.id);
 
 		expect(result.members).toEqual([]);
+		expect(result.total).toBe(0);
 	});
 
 	it('should sort and calculate total and percentages correctly when team has users with earnings', async () => {

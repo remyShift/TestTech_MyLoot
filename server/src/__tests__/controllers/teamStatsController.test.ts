@@ -113,5 +113,34 @@ describe('TeamStatsController', () => {
 				],
 			});
 		});
+
+		it('should return 200 when team exists but has no members', async () => {
+			const mockStats = {
+				total: 0,
+				members: [],
+			};
+
+			const mockService = {
+				getStatsForTeam: jest.fn().mockResolvedValue(mockStats),
+			} as unknown as TeamStatsService;
+
+			const controller = new TeamStatsController(mockService);
+
+			const req = Object.assign({} as Request, {
+				params: { id: '1' },
+			});
+			const res = Object.assign({} as Response, {
+				status: jest.fn().mockReturnThis(),
+				json: jest.fn(),
+			});
+
+			await controller.getTeamStats(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(200);
+			expect(res.json).toHaveBeenCalledWith({
+				total: 0,
+				members: [],
+			});
+		});
 	});
 });
