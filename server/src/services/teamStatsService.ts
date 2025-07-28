@@ -1,25 +1,17 @@
-export interface TeamMember {
-	userId: number;
-	name: string;
-	totalCoins: number;
-}
-
-interface TeamMemberWithPercent extends TeamMember {
-	percent: number;
-}
+import { UserWithStats, UserWithStatsAndPercent } from '@/types/models';
 
 interface TeamStats {
 	total: number;
-	members: TeamMember[];
+	members: UserWithStats[];
 }
 
 interface TeamStatsWithPercent {
 	total: number;
-	members: TeamMemberWithPercent[];
+	members: UserWithStatsAndPercent[];
 }
 
 export interface TeamStatsRepository {
-	getTeamMembers(teamId: number): Promise<TeamMember[]>;
+	getTeamMembers(teamId: number): Promise<UserWithStats[]>;
 }
 
 export class TeamStatsService {
@@ -47,7 +39,7 @@ export class TeamStatsService {
 
 		return {
 			total: members.reduce(
-				(acc: number, member: TeamMember) => acc + member.totalCoins,
+				(acc: number, member: UserWithStats) => acc + member.totalCoins,
 				0
 			),
 			members,

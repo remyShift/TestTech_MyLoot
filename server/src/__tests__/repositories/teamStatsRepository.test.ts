@@ -32,7 +32,9 @@ describe('PrismaTeamStatsRepository', () => {
 			const repo = new PrismaTeamStatsRepository(testPrisma);
 			const result = await repo.getTeamMembers(team.id);
 
-			expect(result).toEqual([{ ...user, totalCoins: 0 }]);
+			expect(result).toEqual([
+				{ ...user, totalCoins: 0, teamId: team.id },
+			]);
 		});
 
 		it('should return team members when team has users with coin earnings', async () => {
@@ -49,7 +51,9 @@ describe('PrismaTeamStatsRepository', () => {
 			const repo = new PrismaTeamStatsRepository(testPrisma);
 			const result = await repo.getTeamMembers(team.id);
 
-			expect(result).toEqual([{ ...user, totalCoins: 100 }]);
+			expect(result).toEqual([
+				{ ...user, totalCoins: 100, teamId: team.id },
+			]);
 		});
 	});
 });

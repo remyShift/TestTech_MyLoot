@@ -26,8 +26,8 @@ describe('TeamStatsService', () => {
 			class FakeRepo implements TeamStatsRepository {
 				async getTeamMembers() {
 					return [
-						{ userId: 1, name: 'John Doe', totalCoins: 0 },
-						{ userId: 2, name: 'Jane Doe', totalCoins: 0 },
+						{ id: 1, name: 'John Doe', totalCoins: 0, teamId: 1 },
+						{ id: 2, name: 'Jane Doe', totalCoins: 0, teamId: 1 },
 					];
 				}
 			}
@@ -39,8 +39,8 @@ describe('TeamStatsService', () => {
 
 			expect(result.total).toBe(0);
 			expect(result.members).toEqual([
-				{ userId: 1, name: 'John Doe', totalCoins: 0 },
-				{ userId: 2, name: 'Jane Doe', totalCoins: 0 },
+				{ id: 1, name: 'John Doe', totalCoins: 0, teamId: 1 },
+				{ id: 2, name: 'Jane Doe', totalCoins: 0, teamId: 1 },
 			]);
 		});
 
@@ -48,8 +48,8 @@ describe('TeamStatsService', () => {
 			class FakeRepo implements TeamStatsRepository {
 				async getTeamMembers() {
 					return [
-						{ userId: 1, name: 'John Doe', totalCoins: 10 },
-						{ userId: 2, name: 'Jane Doe', totalCoins: 20 },
+						{ id: 1, name: 'John Doe', totalCoins: 10, teamId: 1 },
+						{ id: 2, name: 'Jane Doe', totalCoins: 20, teamId: 1 },
 					];
 				}
 			}
@@ -61,8 +61,8 @@ describe('TeamStatsService', () => {
 
 			expect(result.total).toBe(30);
 			expect(result.members).toEqual([
-				{ userId: 1, name: 'John Doe', totalCoins: 10 },
-				{ userId: 2, name: 'Jane Doe', totalCoins: 20 },
+				{ id: 1, name: 'John Doe', totalCoins: 10, teamId: 1 },
+				{ id: 2, name: 'Jane Doe', totalCoins: 20, teamId: 1 },
 			]);
 		});
 	});
@@ -72,9 +72,9 @@ describe('TeamStatsService', () => {
 			class FakeRepo implements TeamStatsRepository {
 				async getTeamMembers() {
 					return [
-						{ userId: 1, name: 'John', totalCoins: 10 },
-						{ userId: 2, name: 'Jane', totalCoins: 30 },
-						{ userId: 3, name: 'Joe', totalCoins: 10 },
+						{ id: 1, name: 'John', totalCoins: 10, teamId: 1 },
+						{ id: 2, name: 'Jane', totalCoins: 30, teamId: 1 },
+						{ id: 3, name: 'Joe', totalCoins: 10, teamId: 1 },
 					];
 				}
 			}
@@ -84,9 +84,9 @@ describe('TeamStatsService', () => {
 
 			expect(result.total).toBe(50);
 			expect(result.members).toEqual([
-				{ userId: 2, name: 'Jane', totalCoins: 30 },
-				{ userId: 1, name: 'John', totalCoins: 10 },
-				{ userId: 3, name: 'Joe', totalCoins: 10 },
+				{ id: 2, name: 'Jane', totalCoins: 30, teamId: 1 },
+				{ id: 1, name: 'John', totalCoins: 10, teamId: 1 },
+				{ id: 3, name: 'Joe', totalCoins: 10, teamId: 1 },
 			]);
 		});
 	});
@@ -96,9 +96,9 @@ describe('TeamStatsService', () => {
 			class FakeRepo implements TeamStatsRepository {
 				async getTeamMembers() {
 					return [
-						{ userId: 1, name: 'John', totalCoins: 10 },
-						{ userId: 2, name: 'Jane', totalCoins: 30 },
-						{ userId: 3, name: 'Joe', totalCoins: 10 },
+						{ id: 1, name: 'John', totalCoins: 10, teamId: 1 },
+						{ id: 2, name: 'Jane', totalCoins: 30, teamId: 1 },
+						{ id: 3, name: 'Joe', totalCoins: 10, teamId: 1 },
 					];
 				}
 			}
@@ -108,9 +108,9 @@ describe('TeamStatsService', () => {
 
 			expect(result.total).toBe(50);
 			expect(result.members).toEqual([
-				{ userId: 2, name: 'Jane', totalCoins: 30, percent: 60 },
-				{ userId: 1, name: 'John', totalCoins: 10, percent: 20 },
-				{ userId: 3, name: 'Joe', totalCoins: 10, percent: 20 },
+				{ id: 2, name: 'Jane', totalCoins: 30, percent: 60, teamId: 1 },
+				{ id: 1, name: 'John', totalCoins: 10, percent: 20, teamId: 1 },
+				{ id: 3, name: 'Joe', totalCoins: 10, percent: 20, teamId: 1 },
 			]);
 		});
 	});
