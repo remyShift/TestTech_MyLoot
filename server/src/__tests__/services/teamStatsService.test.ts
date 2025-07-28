@@ -33,10 +33,32 @@ describe('TeamStatsService', () => {
 		const service = new TeamStatsService(fakeRepo);
 		const result = await service.getStatsForTeam(1);
 
-		expect(result.total).toBe(2);
+		expect(result.total).toBe(0);
 		expect(result.members).toEqual([
 			{ userId: 1, name: 'John Doe', totalCoins: 0 },
 			{ userId: 2, name: 'Jane Doe', totalCoins: 0 },
+		]);
+	});
+
+	it('should return total of team earnings and members of team if team has users with earnings', async () => {
+		class FakeRepo {
+			async getTeamMembers() {
+				return [
+					{ userId: 1, name: 'John Doe', totalCoins: 10 },
+					{ userId: 2, name: 'Jane Doe', totalCoins: 20 },
+				];
+			}
+		}
+
+		const fakeRepo = new FakeRepo();
+
+		const service = new TeamStatsService(fakeRepo);
+		const result = await service.getStatsForTeam(1);
+
+		expect(result.total).toBe(30);
+		expect(result.members).toEqual([
+			{ userId: 1, name: 'John Doe', totalCoins: 10 },
+			{ userId: 2, name: 'Jane Doe', totalCoins: 20 },
 		]);
 	});
 });

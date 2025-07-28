@@ -5,7 +5,10 @@ export class TeamStatsService {
 		const members = await this.teamStatsRepository.getTeamMembers(teamId);
 
 		return {
-			total: members.length,
+			total: members.reduce(
+				(acc: number, member: any) => acc + member.totalCoins,
+				0
+			),
 			members,
 		};
 	}
