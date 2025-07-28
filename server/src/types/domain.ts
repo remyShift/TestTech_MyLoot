@@ -1,6 +1,6 @@
 import { User } from '@/types/models';
 
-export interface UserWithStats extends Omit<User, 'coinEarnings' | 'team'> {
+export interface UserWithStats extends Omit<User, 'coinEarnings'> {
 	totalCoins: number;
 }
 
