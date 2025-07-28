@@ -5,7 +5,7 @@ import {
 } from '@/services/teamStatsService';
 
 describe('TeamStatsService', () => {
-	describe('getStatsForTeam', () => {
+	describe('getTeamsInfo', () => {
 		it('should return 0 total and empty members if team has no users', async () => {
 			class FakeRepo implements TeamStatsRepository {
 				async getTeamMembers() {
@@ -16,7 +16,7 @@ describe('TeamStatsService', () => {
 			const fakeRepo = new FakeRepo();
 
 			const service = new TeamStatsService(fakeRepo);
-			const result = await service.getStatsForTeam(1);
+			const result = await service.getTeamsInfo(1);
 
 			expect(result.total).toBe(0);
 			expect(result.members).toEqual([]);
@@ -35,7 +35,7 @@ describe('TeamStatsService', () => {
 			const fakeRepo = new FakeRepo();
 
 			const service = new TeamStatsService(fakeRepo);
-			const result = await service.getStatsForTeam(1);
+			const result = await service.getTeamsInfo(1);
 
 			expect(result.total).toBe(0);
 			expect(result.members).toEqual([
@@ -57,7 +57,7 @@ describe('TeamStatsService', () => {
 			const fakeRepo = new FakeRepo();
 
 			const service = new TeamStatsService(fakeRepo);
-			const result = await service.getStatsForTeam(1);
+			const result = await service.getTeamsInfo(1);
 
 			expect(result.total).toBe(30);
 			expect(result.members).toEqual([

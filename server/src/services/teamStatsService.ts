@@ -11,7 +11,7 @@ export interface TeamStatsRepository {
 export class TeamStatsService {
 	constructor(private readonly teamStatsRepository: TeamStatsRepository) {}
 
-	async getStatsForTeam(teamId: number) {
+	async getTeamsInfo(teamId: number) {
 		const members = await this.teamStatsRepository.getTeamMembers(teamId);
 
 		return {
