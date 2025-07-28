@@ -20,14 +20,6 @@ describe('PrismaTeamStatsRepository', () => {
 
 			expect(result).toEqual([]);
 		});
-	});
-
-	describe('getTeamMembersWithCoinEarnings', () => {
-		beforeEach(async () => {
-			await testPrisma.coinEarning.deleteMany();
-			await testPrisma.user.deleteMany();
-			await testPrisma.team.deleteMany();
-		});
 
 		it('should return team members when team has users without coin earnings', async () => {
 			const team = await testPrisma.team.create({
@@ -38,9 +30,9 @@ describe('PrismaTeamStatsRepository', () => {
 			});
 
 			const repo = new PrismaTeamStatsRepository(testPrisma);
-			const result = await repo.getTeamMembersWithCoinEarnings(team.id);
+			const result = await repo.getTeamMembers(team.id);
 
-			expect(result).toEqual([{ ...user, coinEarnings: [] }]);
+			expect(result).toEqual([{ ...user, totalCoins: 0 }]);
 		});
 
 		it('should return team members when team has users with coin earnings', async () => {
@@ -55,16 +47,9 @@ describe('PrismaTeamStatsRepository', () => {
 			});
 
 			const repo = new PrismaTeamStatsRepository(testPrisma);
-			const result = await repo.getTeamMembersWithCoinEarnings(team.id);
+			const result = await repo.getTeamMembers(team.id);
 
-			expect(result).toEqual([
-				{
-					...user,
-					coinEarnings: expect.arrayContaining([
-						expect.objectContaining({ amount: 100 }),
-					]),
-				},
-			]);
+			expect(result).toEqual([{ ...user, totalCoins: 100 }]);
 		});
 	});
 });

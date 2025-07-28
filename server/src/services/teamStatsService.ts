@@ -1,4 +1,4 @@
-interface TeamMember {
+export interface TeamMember {
 	userId: number;
 	name: string;
 	totalCoins: number;
