@@ -11,7 +11,7 @@ export class TeamStatsController {
 				return this.teamStatsService
 					.getStatsForTeam(teamId)
 					.then((teamStats) => {
-						res.json({
+						res.status(200).json({
 							total: teamStats.total,
 							members: teamStats.members,
 						});

@@ -54,5 +54,64 @@ describe('TeamStatsController', () => {
 				error: "Error: Team with id 1 doesn't exist",
 			});
 		});
+
+		it('should return 200 with team stats when team exists', async () => {
+			const mockStats = {
+				total: 100,
+				members: [
+					{
+						id: 1,
+						name: 'Alice',
+						totalCoins: 60,
+						percent: 60,
+						teamId: 1,
+					},
+					{
+						id: 2,
+						name: 'Bob',
+						totalCoins: 40,
+						percent: 40,
+						teamId: 1,
+					},
+				],
+			};
+
+			const mockService = {
+				getStatsForTeam: jest.fn().mockResolvedValue(mockStats),
+			} as unknown as TeamStatsService;
+
+			const controller = new TeamStatsController(mockService);
+
+			const req = Object.assign({} as Request, {
+				params: { id: '1' },
+			});
+			const res = Object.assign({} as Response, {
+				status: jest.fn().mockReturnThis(),
+				json: jest.fn(),
+			});
+
+			await controller.getTeamStats(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(200);
+			expect(res.json).toHaveBeenCalledWith({
+				total: 100,
+				members: [
+					{
+						id: 1,
+						name: 'Alice',
+						totalCoins: 60,
+						percent: 60,
+						teamId: 1,
+					},
+					{
+						id: 2,
+						name: 'Bob',
+						totalCoins: 40,
+						percent: 40,
+						teamId: 1,
+					},
+				],
+			});
+		});
 	});
 });
