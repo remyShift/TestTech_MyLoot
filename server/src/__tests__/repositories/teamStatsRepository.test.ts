@@ -1,20 +1,18 @@
-import { PrismaClient } from '@prisma/client';
+import { testPrisma } from '@/__tests__/setup-env';
 import { PrismaTeamStatsRepository } from '@/repositories/prismaTeamStatsRepository';
 import { expect, describe, it, beforeEach } from '@jest/globals';
 
-const prisma = new PrismaClient();
-
 describe('PrismaTeamStatsRepository', () => {
 	beforeEach(async () => {
-		await prisma.coinEarning.deleteMany();
-		await prisma.user.deleteMany();
-		await prisma.team.deleteMany();
+		await testPrisma.coinEarning.deleteMany();
+		await testPrisma.user.deleteMany();
+		await testPrisma.team.deleteMany();
 	});
 
 	it('should return empty array when team has no users', async () => {
-		const team = await prisma.team.create({ data: { name: 'Red' } });
+		const team = await testPrisma.team.create({ data: { name: 'Red' } });
 
-		const repo = new PrismaTeamStatsRepository(prisma);
+		const repo = new PrismaTeamStatsRepository(testPrisma);
 		const result = await repo.getTeamMembers(team.id);
 
 		expect(result).toEqual([]);
