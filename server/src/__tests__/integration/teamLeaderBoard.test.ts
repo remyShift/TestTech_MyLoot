@@ -1,17 +1,21 @@
 import request from 'supertest';
-import { describe, it, expect, beforeEach } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterAll } from '@jest/globals';
 import { createApp } from '@/app';
-import { testPrisma } from '@/__tests__/setup-env';
+import {
+	testPrisma,
+	cleanDatabase,
+	disconnectTestPrisma,
+} from '@/__tests__/setup-env';
 
 const app = createApp();
 
 describe('GET /teams/:id/stats', () => {
 	beforeEach(async () => {
-		await testPrisma.team.deleteMany();
+		await cleanDatabase();
+	});
 
-		await testPrisma.$executeRaw`ALTER SEQUENCE "Team_id_seq" RESTART WITH 1`;
-		await testPrisma.$executeRaw`ALTER SEQUENCE "User_id_seq" RESTART WITH 1`;
-		await testPrisma.$executeRaw`ALTER SEQUENCE "CoinEarning_id_seq" RESTART WITH 1`;
+	afterAll(async () => {
+		await disconnectTestPrisma();
 	});
 
 	it('should return team stats with proper HTTP status', async () => {

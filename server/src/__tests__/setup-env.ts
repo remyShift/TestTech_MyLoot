@@ -15,3 +15,13 @@ export const testPrisma = new PrismaClient({
 		},
 	},
 });
+
+export async function cleanDatabase() {
+	await testPrisma.$executeRaw`TRUNCATE TABLE "Team", "User", "CoinEarning" RESTART IDENTITY CASCADE`;
+
+	await new Promise((resolve) => setTimeout(resolve, 50));
+}
+
+export async function disconnectTestPrisma() {
+	await testPrisma.$disconnect();
+}

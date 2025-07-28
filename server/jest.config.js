@@ -14,4 +14,5 @@ module.exports = {
 		'^@/(.*)$': '<rootDir>/src/$1',
 	},
 	roots: ['<rootDir>/src'],
+	maxWorkers: 1,
 };

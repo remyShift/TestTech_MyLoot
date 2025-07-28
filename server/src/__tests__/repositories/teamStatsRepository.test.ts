@@ -1,17 +1,19 @@
-import { testPrisma } from '@/__tests__/setup-env';
+import {
+	testPrisma,
+	cleanDatabase,
+	disconnectTestPrisma,
+} from '@/__tests__/setup-env';
 import { PrismaTeamStatsRepository } from '@/repositories/teamStatsRepository';
-import { expect, describe, it, beforeEach } from '@jest/globals';
+import { expect, describe, it, beforeEach, afterAll } from '@jest/globals';
 
 describe('PrismaTeamStatsRepository', () => {
 	describe('getTeamMembers', () => {
 		beforeEach(async () => {
-			await testPrisma.coinEarning.deleteMany();
-			await testPrisma.user.deleteMany();
-			await testPrisma.team.deleteMany();
+			await cleanDatabase();
+		});
 
-			await testPrisma.$executeRaw`ALTER SEQUENCE "Team_id_seq" RESTART WITH 1`;
-			await testPrisma.$executeRaw`ALTER SEQUENCE "User_id_seq" RESTART WITH 1`;
-			await testPrisma.$executeRaw`ALTER SEQUENCE "CoinEarning_id_seq" RESTART WITH 1`;
+		afterAll(async () => {
+			await disconnectTestPrisma();
 		});
 
 		it('should return an error when team does not exist', async () => {

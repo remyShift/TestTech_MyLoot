@@ -1,17 +1,19 @@
-import { testPrisma } from '@/__tests__/setup-env';
+import {
+	testPrisma,
+	cleanDatabase,
+	disconnectTestPrisma,
+} from '@/__tests__/setup-env';
 import { PrismaTeamStatsRepository } from '@/repositories/teamStatsRepository';
 import { TeamStatsService } from '@/services/teamStatsService';
-import { beforeEach, describe, expect, it } from '@jest/globals';
+import { beforeEach, describe, expect, it, afterAll } from '@jest/globals';
 
 describe('TeamStatsService integration', () => {
 	beforeEach(async () => {
-		await testPrisma.coinEarning.deleteMany();
-		await testPrisma.user.deleteMany();
-		await testPrisma.team.deleteMany();
+		await cleanDatabase();
+	});
 
-		await testPrisma.$executeRaw`ALTER SEQUENCE "Team_id_seq" RESTART WITH 1`;
-		await testPrisma.$executeRaw`ALTER SEQUENCE "User_id_seq" RESTART WITH 1`;
-		await testPrisma.$executeRaw`ALTER SEQUENCE "CoinEarning_id_seq" RESTART WITH 1`;
+	afterAll(async () => {
+		await disconnectTestPrisma();
 	});
 
 	it('should return an error when team does not exist', async () => {
@@ -35,44 +37,41 @@ describe('TeamStatsService integration', () => {
 	});
 
 	it('should sort and calculate total and percentages correctly when team has users with earnings', async () => {
-		const result = await testPrisma.$transaction(async (tx) => {
-			const team = await tx.team.create({ data: { name: 'Blue' } });
+		// Create data without transaction to ensure it's committed
+		const team = await testPrisma.team.create({ data: { name: 'Blue' } });
 
-			const user1 = await tx.user.create({
-				data: { name: 'Alice', teamId: team.id },
-			});
-			const user2 = await tx.user.create({
-				data: { name: 'Bob', teamId: team.id },
-			});
+		const user1 = await testPrisma.user.create({
+			data: { name: 'Alice', teamId: team.id },
+		});
+		const user2 = await testPrisma.user.create({
+			data: { name: 'Bob', teamId: team.id },
+		});
 
-			await tx.coinEarning.create({
-				data: { amount: 50, userId: user1.id },
-			});
-			await tx.coinEarning.create({
-				data: { amount: 150, userId: user2.id },
-			});
-
-			return { team, user1, user2 };
+		await testPrisma.coinEarning.create({
+			data: { amount: 50, userId: user1.id },
+		});
+		await testPrisma.coinEarning.create({
+			data: { amount: 150, userId: user2.id },
 		});
 
 		const repo = new PrismaTeamStatsRepository(testPrisma);
 		const service = new TeamStatsService(repo);
 
-		const stats = await service.getTeamLeaderBoard(result.team.id);
+		const stats = await service.getTeamLeaderBoard(team.id);
 
 		expect(stats.total).toBe(200);
 		expect(stats.members).toEqual([
 			expect.objectContaining({
-				id: result.user2.id,
+				id: user2.id,
 				name: 'Bob',
-				teamId: result.team.id,
+				teamId: team.id,
 				totalCoins: 150,
 				percent: 75,
 			}),
 			expect.objectContaining({
-				id: result.user1.id,
+				id: user1.id,
 				name: 'Alice',
-				teamId: result.team.id,
+				teamId: team.id,
 				totalCoins: 50,
 				percent: 25,
 			}),
