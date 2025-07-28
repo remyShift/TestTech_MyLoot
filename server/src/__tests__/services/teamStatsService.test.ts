@@ -1,9 +1,12 @@
 import { describe, it, expect } from '@jest/globals';
-import { TeamStatsService } from '@/services/teamStatsService';
+import {
+	TeamStatsService,
+	TeamStatsRepository,
+} from '@/services/teamStatsService';
 
 describe('TeamStatsService', () => {
 	it('should return 0 total and empty members if team has no users', async () => {
-		class FakeRepo {
+		class FakeRepo implements TeamStatsRepository {
 			async getTeamMembers() {
 				return [];
 			}
@@ -19,7 +22,7 @@ describe('TeamStatsService', () => {
 	});
 
 	it('should return 0 total and members of team if team has users even if they have no earnings', async () => {
-		class FakeRepo {
+		class FakeRepo implements TeamStatsRepository {
 			async getTeamMembers() {
 				return [
 					{ userId: 1, name: 'John Doe', totalCoins: 0 },
@@ -41,7 +44,7 @@ describe('TeamStatsService', () => {
 	});
 
 	it('should return total of team earnings and members of team if team has users with earnings', async () => {
-		class FakeRepo {
+		class FakeRepo implements TeamStatsRepository {
 			async getTeamMembers() {
 				return [
 					{ userId: 1, name: 'John Doe', totalCoins: 10 },
