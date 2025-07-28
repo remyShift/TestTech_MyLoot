@@ -31,17 +31,11 @@ export class TeamStatsService {
 			0
 		);
 
-		const withPercent = members.map((member) => ({
-			...member,
-			percent:
-				total === 0 ? 0 : Math.round((member.totalCoins / total) * 100),
-		}));
-
-		withPercent.sort((a, b) => b.totalCoins - a.totalCoins);
+		members.sort((a, b) => b.totalCoins - a.totalCoins);
 
 		return {
 			total,
-			members: withPercent,
+			members,
 		};
 	}
 }
