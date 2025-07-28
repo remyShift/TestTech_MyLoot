@@ -17,4 +17,16 @@ describe('PrismaTeamStatsRepository', () => {
 
 		expect(result).toEqual([]);
 	});
+
+	it('should return team members when team has users', async () => {
+		const team = await testPrisma.team.create({ data: { name: 'Red' } });
+		const user = await testPrisma.user.create({
+			data: { name: 'John', teamId: team.id },
+		});
+
+		const repo = new PrismaTeamStatsRepository(testPrisma);
+		const result = await repo.getTeamMembers(team.id);
+
+		expect(result).toEqual([user]);
+	});
 });

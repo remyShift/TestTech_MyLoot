@@ -5,6 +5,10 @@ export class PrismaTeamStatsRepository implements TeamStatsRepository {
 	constructor(private readonly prisma: PrismaClient) {}
 
 	async getTeamMembers(teamId: number) {
-		return [];
+		return this.prisma.user.findMany({
+			where: {
+				teamId,
+			},
+		});
 	}
 }
