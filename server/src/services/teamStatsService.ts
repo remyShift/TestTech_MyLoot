@@ -1,7 +1,6 @@
 import { UserWithStats } from '@/types/domain';
 import { TeamStatsRepository } from '@/repositories/teamStatsRepository';
 import { TeamLeaderboard } from '@/types/api';
-import { TeamIdValidator } from '@/utils/validators';
 
 interface TeamStats {
 	total: number;
@@ -12,8 +11,7 @@ export class TeamStatsService {
 	constructor(private readonly teamStatsRepository: TeamStatsRepository) {}
 
 	async getStatsForTeam(teamId: number): Promise<TeamLeaderboard> {
-		TeamIdValidator.validateNumber(teamId);
-
+		// Plus de validation ici - elle est faite au niveau controller
 		const membersWithTotal = await this.getSortedStatsForTeam(teamId);
 
 		const total = membersWithTotal.total;
@@ -31,8 +29,6 @@ export class TeamStatsService {
 	}
 
 	async getRawStatsForTeam(teamId: number): Promise<TeamStats> {
-		TeamIdValidator.validateNumber(teamId);
-
 		const members = await this.teamStatsRepository.getTeamMembers(teamId);
 
 		return {
@@ -45,8 +41,6 @@ export class TeamStatsService {
 	}
 
 	async getSortedStatsForTeam(teamId: number): Promise<TeamStats> {
-		TeamIdValidator.validateNumber(teamId);
-
 		const membersWithTotal = await this.getRawStatsForTeam(teamId);
 
 		const sortedMembers = membersWithTotal.members.sort(
