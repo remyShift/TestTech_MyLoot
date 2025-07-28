@@ -19,14 +19,14 @@ describe('TeamStatsService integration', () => {
 		);
 	});
 
-	it('should return an error when team has no users', async () => {
+	it('should return an empty array when team has no users', async () => {
 		const team = await testPrisma.team.create({ data: { name: 'Blue' } });
 		const repo = new PrismaTeamStatsRepository(testPrisma);
 		const service = new TeamStatsService(repo);
 
-		await expect(service.getStatsForTeam(team.id)).rejects.toThrow(
-			`Error: No users found for team ${team.id}`
-		);
+		const result = await service.getStatsForTeam(team.id);
+
+		expect(result.members).toEqual([]);
 	});
 
 	it('should sort and calculate total and percentages correctly when team has users with earnings', async () => {

@@ -17,15 +17,15 @@ describe('PrismaTeamStatsRepository', () => {
 			);
 		});
 
-		it('should return an error when team has no users', async () => {
+		it('should return an empty array when team has no users', async () => {
 			const team = await testPrisma.team.create({
 				data: { name: 'Red' },
 			});
 
 			const repo = new PrismaTeamStatsRepository(testPrisma);
-			await expect(repo.getTeamMembers(team.id)).rejects.toThrow(
-				`Error: No users found for team ${team.id}`
-			);
+			const result = await repo.getTeamMembers(team.id);
+
+			expect(result).toEqual([]);
 		});
 
 		it('should return team members when team has users without coin earnings', async () => {
@@ -60,6 +60,26 @@ describe('PrismaTeamStatsRepository', () => {
 
 			expect(result).toEqual([
 				{ ...user, totalCoins: 100, teamId: team.id },
+			]);
+		});
+
+		it('should return one member with 0 coins if user has no earnings', async () => {
+			const team = await testPrisma.team.create({
+				data: { name: 'Red' },
+			});
+
+			const user = await testPrisma.user.create({
+				data: {
+					name: 'Alice',
+					teamId: team.id,
+				},
+			});
+
+			const repo = new PrismaTeamStatsRepository(testPrisma);
+			const result = await repo.getTeamMembers(team.id);
+
+			expect(result).toEqual([
+				{ ...user, totalCoins: 0, teamId: team.id },
 			]);
 		});
 	});

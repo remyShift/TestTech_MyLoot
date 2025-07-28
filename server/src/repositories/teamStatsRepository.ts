@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { TeamStatsRepository } from '@/services/teamStatsService';
-import { CoinEarning, User } from '@/types/models';
+import { CoinEarning, User, UserWithStats } from '@/types/models';
 
 export class PrismaTeamStatsRepository implements TeamStatsRepository {
 	constructor(private readonly prisma: PrismaClient) {}
@@ -22,7 +22,7 @@ export class PrismaTeamStatsRepository implements TeamStatsRepository {
 		});
 
 		if (users.length === 0) {
-			throw new Error(`Error: No users found for team ${teamId}`);
+			return [];
 		}
 
 		return users.map((user: User) => {
