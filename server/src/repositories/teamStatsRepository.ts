@@ -11,4 +11,13 @@ export class PrismaTeamStatsRepository implements TeamStatsRepository {
 			},
 		});
 	}
+
+	async getTeamMembersWithCoinEarnings(teamId: number) {
+		return this.prisma.user.findMany({
+			where: { teamId },
+			include: {
+				coinEarnings: true,
+			},
+		});
+	}
 }
