@@ -6,6 +6,14 @@ export class PrismaTeamStatsRepository implements TeamStatsRepository {
 	constructor(private readonly prisma: PrismaClient) {}
 
 	async getTeamMembers(teamId: number) {
+		const team = await this.prisma.team.findUnique({
+			where: { id: teamId },
+		});
+
+		if (!team) {
+			throw new Error(`Error: Team with id ${teamId} doesn't exist`);
+		}
+
 		const users = await this.prisma.user.findMany({
 			where: { teamId },
 			include: {

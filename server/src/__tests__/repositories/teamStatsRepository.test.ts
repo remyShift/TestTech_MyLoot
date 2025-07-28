@@ -55,5 +55,12 @@ describe('PrismaTeamStatsRepository', () => {
 				{ ...user, totalCoins: 100, teamId: team.id },
 			]);
 		});
+
+		it('should return an error when team does not exist', async () => {
+			const repo = new PrismaTeamStatsRepository(testPrisma);
+			await expect(repo.getTeamMembers(1)).rejects.toThrow(
+				"Error: Team with id 1 doesn't exist"
+			);
+		});
 	});
 });
