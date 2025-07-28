@@ -14,4 +14,4 @@ router.get('/teams/:id/stats', (req, res) => {
 	controller.getTeamStats(req, res);
 });
 
-export { router as teamStatsRouter };
+export { router as teamLeaderBoardRouter };
