@@ -15,7 +15,7 @@ describe('TeamStatsService integration', () => {
 		const service = new TeamStatsService(repo);
 
 		await expect(service.getStatsForTeam(1)).rejects.toThrow(
-			`Error: Team with id 1 doesn't exist`
+			`Team with id 1 doesn't exist`
 		);
 	});
 

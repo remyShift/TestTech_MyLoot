@@ -1,42 +1,32 @@
 import { PrismaClient } from '@prisma/client';
 import { UserWithStats } from '@/types/domain';
-import { User, CoinEarning } from '@/types/models';
+import { CoinEarning, User } from '@/types/models';
 import { NotFoundError } from '@/utils/errors';
 
 export interface TeamStatsRepository {
 	getTeamMembers(teamId: number): Promise<UserWithStats[]>;
 }
 
-type DBUser = User & {
-	coinEarnings: CoinEarning[];
-};
-
 export class PrismaTeamStatsRepository implements TeamStatsRepository {
 	constructor(private readonly prisma: PrismaClient) {}
 
 	async getTeamMembers(teamId: number): Promise<UserWithStats[]> {
-		const team = await this.prisma.team.findUnique({
+		const result = await this.prisma.team.findUnique({
 			where: { id: teamId },
-		});
-
-		if (!team) {
-			throw new NotFoundError(
-				`Error: Team with id ${teamId} doesn't exist`
-			);
-		}
-
-		const users: DBUser[] = await this.prisma.user.findMany({
-			where: { teamId },
 			include: {
-				coinEarnings: true,
+				users: {
+					include: {
+						coinEarnings: true,
+					},
+				},
 			},
 		});
 
-		if (users.length === 0) {
-			return [];
+		if (!result) {
+			throw new NotFoundError(`Team with id ${teamId} doesn't exist`);
 		}
 
-		return users.map((user: DBUser) => {
+		return result.users.map((user: User) => {
 			const { coinEarnings, ...userWithoutEarnings } = user;
 
 			return {

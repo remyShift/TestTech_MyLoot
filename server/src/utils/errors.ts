@@ -18,10 +18,6 @@ export class ErrorHandler {
 			res.status(400).json({ error: error.message });
 		} else if (error instanceof NotFoundError) {
 			res.status(404).json({ error: error.message });
-		} else if (error.message.includes('must be a positive integer')) {
-			res.status(400).json({ error: error.message });
-		} else if (error.message.includes("doesn't exist")) {
-			res.status(404).json({ error: error.message });
 		} else {
 			res.status(500).json({ error: 'Internal server error' });
 		}

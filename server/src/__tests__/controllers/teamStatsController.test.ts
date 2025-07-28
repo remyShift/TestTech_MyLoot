@@ -2,6 +2,7 @@ import { describe, it, expect } from '@jest/globals';
 import { Request, Response } from 'express';
 import { TeamStatsController } from '@/controllers/teamStatsController';
 import { TeamStatsService } from '@/services/teamStatsService';
+import { NotFoundError } from '@/utils/errors';
 
 describe('TeamStatsController', () => {
 	describe('getTeamStats', () => {
@@ -33,7 +34,7 @@ describe('TeamStatsController', () => {
 				getStatsForTeam: jest
 					.fn()
 					.mockRejectedValue(
-						new Error("Error: Team with id 1 doesn't exist")
+						new NotFoundError("Team with id 1 doesn't exist")
 					),
 			} as unknown as TeamStatsService;
 
@@ -51,7 +52,7 @@ describe('TeamStatsController', () => {
 
 			expect(res.status).toHaveBeenCalledWith(404);
 			expect(res.json).toHaveBeenCalledWith({
-				error: "Error: Team with id 1 doesn't exist",
+				error: "Team with id 1 doesn't exist",
 			});
 		});
 

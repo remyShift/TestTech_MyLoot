@@ -11,7 +11,6 @@ export class TeamStatsService {
 	constructor(private readonly teamStatsRepository: TeamStatsRepository) {}
 
 	async getStatsForTeam(teamId: number): Promise<TeamLeaderboard> {
-		// Plus de validation ici - elle est faite au niveau controller
 		const membersWithTotal = await this.getSortedStatsForTeam(teamId);
 
 		const total = membersWithTotal.total;

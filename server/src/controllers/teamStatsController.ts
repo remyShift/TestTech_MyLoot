@@ -20,8 +20,6 @@ export class TeamStatsController {
 						});
 					});
 			})
-			.catch((error) => {
-				ErrorHandler.handleControllerError(error, res);
-			});
+			.catch((error) => ErrorHandler.handleControllerError(error, res));
 	}
 }
