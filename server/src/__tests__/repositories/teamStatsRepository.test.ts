@@ -1,5 +1,5 @@
 import { testPrisma } from '@/__tests__/setup-env';
-import { PrismaTeamStatsRepository } from '@/repositories/prismaTeamStatsRepository';
+import { PrismaTeamStatsRepository } from '@/repositories/teamStatsRepository';
 import { expect, describe, it, beforeEach } from '@jest/globals';
 
 describe('PrismaTeamStatsRepository', () => {
