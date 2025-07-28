@@ -1,6 +1,7 @@
 import { UserWithStats } from '@/types/domain';
 import { TeamStatsRepository } from '@/repositories/teamStatsRepository';
 import { TeamLeaderboard } from '@/types/api';
+import { TeamIdValidator } from '@/utils/validators';
 
 interface TeamStats {
 	total: number;
@@ -11,7 +12,7 @@ export class TeamStatsService {
 	constructor(private readonly teamStatsRepository: TeamStatsRepository) {}
 
 	async getStatsForTeam(teamId: number): Promise<TeamLeaderboard> {
-		this.validateTeamId(teamId);
+		TeamIdValidator.validateNumber(teamId);
 
 		const membersWithTotal = await this.getSortedStatsForTeam(teamId);
 
@@ -30,7 +31,7 @@ export class TeamStatsService {
 	}
 
 	async getRawStatsForTeam(teamId: number): Promise<TeamStats> {
-		this.validateTeamId(teamId);
+		TeamIdValidator.validateNumber(teamId);
 
 		const members = await this.teamStatsRepository.getTeamMembers(teamId);
 
@@ -44,7 +45,7 @@ export class TeamStatsService {
 	}
 
 	async getSortedStatsForTeam(teamId: number): Promise<TeamStats> {
-		this.validateTeamId(teamId);
+		TeamIdValidator.validateNumber(teamId);
 
 		const membersWithTotal = await this.getRawStatsForTeam(teamId);
 
@@ -56,11 +57,5 @@ export class TeamStatsService {
 			total: membersWithTotal.total,
 			members: sortedMembers,
 		};
-	}
-
-	private validateTeamId(teamId: number): void {
-		if (!Number.isInteger(teamId) || teamId <= 0) {
-			throw new Error('Team ID must be a positive integer');
-		}
 	}
 }

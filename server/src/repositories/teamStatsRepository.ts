@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { UserWithStats } from '@/types/domain';
 import { User, CoinEarning } from '@/types/models';
+import { TeamIdValidator } from '@/utils/validators';
 
 export interface TeamStatsRepository {
 	getTeamMembers(teamId: number): Promise<UserWithStats[]>;
@@ -14,7 +15,7 @@ export class PrismaTeamStatsRepository implements TeamStatsRepository {
 	constructor(private readonly prisma: PrismaClient) {}
 
 	async getTeamMembers(teamId: number): Promise<UserWithStats[]> {
-		this.validateTeamId(teamId);
+		TeamIdValidator.validateNumber(teamId);
 
 		const team = await this.prisma.team.findUnique({
 			where: { id: teamId },
@@ -46,11 +47,5 @@ export class PrismaTeamStatsRepository implements TeamStatsRepository {
 				),
 			} as UserWithStats;
 		});
-	}
-
-	private validateTeamId(teamId: number): void {
-		if (!Number.isInteger(teamId) || teamId <= 0) {
-			throw new Error('Team ID must be a positive integer');
-		}
 	}
 }
