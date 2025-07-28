@@ -11,6 +11,27 @@ export interface TeamStatsRepository {
 export class TeamStatsService {
 	constructor(private readonly teamStatsRepository: TeamStatsRepository) {}
 
+	async getStatsForTeam(teamId: number) {
+		const membersWithTotal = await this.getSortedStatsForTeam(teamId);
+
+		const members = membersWithTotal.members.map((member) => ({
+			...member,
+			percent:
+				membersWithTotal.total === 0
+					? 0
+					: Math.round(
+							(member.totalCoins / membersWithTotal.total) * 100
+					  ),
+		}));
+
+		members.sort((a, b) => b.totalCoins - a.totalCoins);
+
+		return {
+			total: membersWithTotal.total,
+			members,
+		};
+	}
+
 	async getTeamsInfo(teamId: number) {
 		const members = await this.teamStatsRepository.getTeamMembers(teamId);
 
