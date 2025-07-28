@@ -10,7 +10,7 @@ interface TeamStats {
 export class TeamStatsService {
 	constructor(private readonly teamStatsRepository: TeamStatsRepository) {}
 
-	async getStatsForTeam(teamId: number): Promise<TeamLeaderboard> {
+	async getTeamLeaderBoard(teamId: number): Promise<TeamLeaderboard> {
 		const membersWithTotal = await this.getSortedStatsForTeam(teamId);
 
 		const total = membersWithTotal.total;

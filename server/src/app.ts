@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { teamStatsRouter } from '@/routes/teamStats';
+import { teamStatsRouter } from '@/routes/teamLeaderBoard';
 
 export function createApp() {
 	const app = express();

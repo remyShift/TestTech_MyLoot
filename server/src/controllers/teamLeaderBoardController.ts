@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { TeamIdValidator } from '@/utils/validators';
 import { ErrorHandler } from '@/utils/errors';
 
-export class TeamStatsController {
+export class TeamLeaderBoardController {
 	constructor(private readonly teamStatsService: TeamStatsService) {}
 
 	async getTeamStats(req: Request, res: Response) {
@@ -12,7 +12,7 @@ export class TeamStatsController {
 		return TeamIdValidator.validate(id)
 			.then(async (teamId) => {
 				return this.teamStatsService
-					.getStatsForTeam(teamId)
+					.getTeamLeaderBoard(teamId)
 					.then((teamStats) => {
 						res.status(200).json({
 							total: teamStats.total,

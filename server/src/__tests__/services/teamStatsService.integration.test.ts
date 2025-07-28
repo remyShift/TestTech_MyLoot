@@ -16,7 +16,7 @@ describe('TeamStatsService integration', () => {
 		const repo = new PrismaTeamStatsRepository(testPrisma);
 		const service = new TeamStatsService(repo);
 
-		await expect(service.getStatsForTeam(1)).rejects.toThrow(
+		await expect(service.getTeamLeaderBoard(1)).rejects.toThrow(
 			`Team with id 1 doesn't exist`
 		);
 	});
@@ -26,7 +26,7 @@ describe('TeamStatsService integration', () => {
 		const repo = new PrismaTeamStatsRepository(testPrisma);
 		const service = new TeamStatsService(repo);
 
-		const result = await service.getStatsForTeam(team.id);
+		const result = await service.getTeamLeaderBoard(team.id);
 
 		expect(result.members).toEqual([]);
 		expect(result.total).toBe(0);
@@ -56,7 +56,7 @@ describe('TeamStatsService integration', () => {
 		const repo = new PrismaTeamStatsRepository(testPrisma);
 		const service = new TeamStatsService(repo);
 
-		const stats = await service.getStatsForTeam(result.team.id);
+		const stats = await service.getTeamLeaderBoard(result.team.id);
 
 		expect(stats.total).toBe(200);
 		expect(stats.members).toEqual([

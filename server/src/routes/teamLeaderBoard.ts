@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { TeamStatsController } from '@/controllers/teamStatsController';
+import { TeamLeaderBoardController } from '@/controllers/teamLeaderBoardController';
 import { TeamStatsService } from '@/services/teamStatsService';
 import { PrismaTeamStatsRepository } from '@/repositories/teamStatsRepository';
 import { PrismaClient } from '@prisma/client';
@@ -10,7 +10,7 @@ router.get('/teams/:id/stats', (req, res) => {
 	const service = new TeamStatsService(
 		new PrismaTeamStatsRepository(new PrismaClient())
 	);
-	const controller = new TeamStatsController(service);
+	const controller = new TeamLeaderBoardController(service);
 	controller.getTeamStats(req, res);
 });
 

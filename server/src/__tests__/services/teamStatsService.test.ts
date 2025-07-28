@@ -89,7 +89,7 @@ describe('TeamStatsService', () => {
 		});
 	});
 
-	describe('getStatsForTeam', () => {
+	describe('getTeamLeaderBoard', () => {
 		it('should return members sorted by totalCoins and include percent contribution', async () => {
 			class FakeRepo implements TeamStatsRepository {
 				async getTeamMembers() {
@@ -102,7 +102,7 @@ describe('TeamStatsService', () => {
 			}
 
 			const service = new TeamStatsService(new FakeRepo());
-			const result = await service.getStatsForTeam(1);
+			const result = await service.getTeamLeaderBoard(1);
 
 			expect(result.total).toBe(50);
 			expect(result.members).toEqual([

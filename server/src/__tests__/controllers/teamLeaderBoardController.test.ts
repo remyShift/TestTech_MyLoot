@@ -1,6 +1,6 @@
 import { describe, it, expect } from '@jest/globals';
 import { Request, Response } from 'express';
-import { TeamStatsController } from '@/controllers/teamStatsController';
+import { TeamLeaderBoardController } from '@/controllers/teamLeaderBoardController';
 import { TeamStatsService } from '@/services/teamStatsService';
 import { NotFoundError } from '@/utils/errors';
 
@@ -8,10 +8,10 @@ describe('TeamStatsController', () => {
 	describe('getTeamStats', () => {
 		it('should return 400 when teamId is not a valid number', async () => {
 			const mockService = {
-				getStatsForTeam: jest.fn(),
+				getTeamLeaderBoard: jest.fn(),
 			} as unknown as TeamStatsService;
 
-			const controller = new TeamStatsController(mockService);
+			const controller = new TeamLeaderBoardController(mockService);
 
 			const req = Object.assign({} as Request, {
 				params: { id: 'toto' },
@@ -31,14 +31,14 @@ describe('TeamStatsController', () => {
 
 		it('should return 404 when team does not exist', async () => {
 			const mockService = {
-				getStatsForTeam: jest
+				getTeamLeaderBoard: jest
 					.fn()
 					.mockRejectedValue(
 						new NotFoundError("Team with id 1 doesn't exist")
 					),
 			} as unknown as TeamStatsService;
 
-			const controller = new TeamStatsController(mockService);
+			const controller = new TeamLeaderBoardController(mockService);
 
 			const req = Object.assign({} as Request, {
 				params: { id: '1' },
@@ -78,10 +78,10 @@ describe('TeamStatsController', () => {
 			};
 
 			const mockService = {
-				getStatsForTeam: jest.fn().mockResolvedValue(mockStats),
+				getTeamLeaderBoard: jest.fn().mockResolvedValue(mockStats),
 			} as unknown as TeamStatsService;
 
-			const controller = new TeamStatsController(mockService);
+			const controller = new TeamLeaderBoardController(mockService);
 
 			const req = Object.assign({} as Request, {
 				params: { id: '1' },
@@ -122,10 +122,10 @@ describe('TeamStatsController', () => {
 			};
 
 			const mockService = {
-				getStatsForTeam: jest.fn().mockResolvedValue(mockStats),
+				getTeamLeaderBoard: jest.fn().mockResolvedValue(mockStats),
 			} as unknown as TeamStatsService;
 
-			const controller = new TeamStatsController(mockService);
+			const controller = new TeamLeaderBoardController(mockService);
 
 			const req = Object.assign({} as Request, {
 				params: { id: '1' },
