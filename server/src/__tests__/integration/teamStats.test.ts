@@ -7,9 +7,11 @@ const app = createApp();
 
 describe('GET /teams/:id/stats', () => {
 	beforeEach(async () => {
-		await testPrisma.coinEarning.deleteMany();
-		await testPrisma.user.deleteMany();
 		await testPrisma.team.deleteMany();
+
+		await testPrisma.$executeRaw`ALTER SEQUENCE "Team_id_seq" RESTART WITH 1`;
+		await testPrisma.$executeRaw`ALTER SEQUENCE "User_id_seq" RESTART WITH 1`;
+		await testPrisma.$executeRaw`ALTER SEQUENCE "CoinEarning_id_seq" RESTART WITH 1`;
 	});
 
 	it('should return team stats with proper HTTP status', async () => {
