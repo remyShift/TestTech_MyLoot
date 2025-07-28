@@ -14,20 +14,16 @@ export class TeamStatsService {
 	async getStatsForTeam(teamId: number) {
 		const membersWithTotal = await this.getSortedStatsForTeam(teamId);
 
+		const total = membersWithTotal.total;
+
 		const members = membersWithTotal.members.map((member) => ({
 			...member,
 			percent:
-				membersWithTotal.total === 0
-					? 0
-					: Math.round(
-							(member.totalCoins / membersWithTotal.total) * 100
-					  ),
+				total === 0 ? 0 : Math.round((member.totalCoins / total) * 100),
 		}));
 
-		members.sort((a, b) => b.totalCoins - a.totalCoins);
-
 		return {
-			total: membersWithTotal.total,
+			total,
 			members,
 		};
 	}
@@ -45,18 +41,15 @@ export class TeamStatsService {
 	}
 
 	async getSortedStatsForTeam(teamId: number) {
-		const members = await this.teamStatsRepository.getTeamMembers(teamId);
+		const membersWithTotal = await this.getTeamsInfo(teamId);
 
-		const total = members.reduce(
-			(acc: number, member: TeamMember) => acc + member.totalCoins,
-			0
+		const sortedMembers = membersWithTotal.members.sort(
+			(a, b) => b.totalCoins - a.totalCoins
 		);
 
-		members.sort((a, b) => b.totalCoins - a.totalCoins);
-
 		return {
-			total,
-			members,
+			total: membersWithTotal.total,
+			members: sortedMembers,
 		};
 	}
 }
