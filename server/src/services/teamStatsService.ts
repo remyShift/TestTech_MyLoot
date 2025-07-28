@@ -1,20 +1,16 @@
-import { UserWithStats, UserWithStatsAndPercent } from '@/types/models';
+import { UserWithStats } from '@/types/domain';
 import { TeamStatsRepository } from '@/repositories/teamStatsRepository';
+import { TeamLeaderboard } from '@/types/api';
 
 interface TeamStats {
 	total: number;
 	members: UserWithStats[];
 }
 
-interface TeamStatsWithPercent {
-	total: number;
-	members: UserWithStatsAndPercent[];
-}
-
 export class TeamStatsService {
 	constructor(private readonly teamStatsRepository: TeamStatsRepository) {}
 
-	async getStatsForTeam(teamId: number): Promise<TeamStatsWithPercent> {
+	async getStatsForTeam(teamId: number): Promise<TeamLeaderboard> {
 		this.validateTeamId(teamId);
 
 		const membersWithTotal = await this.getSortedStatsForTeam(teamId);

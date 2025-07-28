@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-import { PrismaClient } from '../../prisma/generated/prisma';
+import { PrismaClient } from '@prisma/client';
 import path from 'path';
 
 config({ path: path.join(__dirname, '.env.test') });
