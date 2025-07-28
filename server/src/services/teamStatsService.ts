@@ -22,4 +22,26 @@ export class TeamStatsService {
 			members,
 		};
 	}
+
+	async getSortedStatsForTeam(teamId: number) {
+		const members = await this.teamStatsRepository.getTeamMembers(teamId);
+
+		const total = members.reduce(
+			(acc: number, member: TeamMember) => acc + member.totalCoins,
+			0
+		);
+
+		const withPercent = members.map((member) => ({
+			...member,
+			percent:
+				total === 0 ? 0 : Math.round((member.totalCoins / total) * 100),
+		}));
+
+		withPercent.sort((a, b) => b.totalCoins - a.totalCoins);
+
+		return {
+			total,
+			members: withPercent,
+		};
+	}
 }
