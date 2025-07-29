@@ -28,6 +28,9 @@ async function main() {
 		prisma.team.create({
 			data: { name: 'Assassins Noirs' },
 		}),
+		prisma.team.create({
+			data: { name: 'Fantômes Violets' },
+		}),
 	]);
 
 	console.log('🏰 Teams created :', teams.map((t) => t.name).join(', '));
@@ -181,6 +184,9 @@ async function main() {
 	);
 	console.log(
 		`  GET /teams/${teams[3].id}/stats - Assassins Noirs (équipe inactive)`
+	);
+	console.log(
+		`  GET /teams/${teams[4].id}/stats - Fantômes Violets (équipe vide)`
 	);
 }
 
