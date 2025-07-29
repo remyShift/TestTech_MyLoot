@@ -1,7 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
-import { useTeamStats } from '../../hooks/useTeamStats';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useTeamStatsQuery } from '@/hooks/useTeamStatsQuery';
 import axios from 'axios';
+import type { ReactNode } from 'react';
 
 vi.mock('axios', () => ({
 	default: {
@@ -11,21 +13,37 @@ vi.mock('axios', () => ({
 
 const mockedAxios = axios;
 
-describe('useTeamStats Hook', () => {
+function createWrapper() {
+	const queryClient = new QueryClient({
+		defaultOptions: {
+			queries: {
+				retry: false,
+			},
+		},
+	});
+	
+	return ({ children }: { children: ReactNode }) => (
+		<QueryClientProvider client={queryClient}>
+			{children}
+		</QueryClientProvider>
+	);
+}
+
+describe('useTeamStatsQuery Hook', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});
 
 	it('should return loading state initially', () => {
-		vi.mocked(mockedAxios.get).mockImplementation(
-			() => new Promise(() => {})
-		);
-
-		const { result } = renderHook(() => useTeamStats('1'));
+		vi.mocked(mockedAxios.get).mockImplementation(() => new Promise(() => {}));
+		
+		const { result } = renderHook(() => useTeamStatsQuery('1'), {
+			wrapper: createWrapper(),
+		});
 
 		expect(result.current.isLoading).toBe(true);
-		expect(result.current.data).toBe(null);
-		expect(result.current.error).toBe(null);
+		expect(result.current.data).toBeUndefined();
+		expect(result.current.error).toBeNull();
 	});
 
 	it('should fetch team stats successfully', async () => {
@@ -51,14 +69,16 @@ describe('useTeamStats Hook', () => {
 
 		vi.mocked(mockedAxios.get).mockResolvedValueOnce({ data: mockData });
 
-		const { result } = renderHook(() => useTeamStats('1'));
+		const { result } = renderHook(() => useTeamStatsQuery('1'), {
+			wrapper: createWrapper(),
+		});
 
 		await waitFor(() => {
 			expect(result.current.isLoading).toBe(false);
 		});
 
 		expect(result.current.data).toEqual(mockData);
-		expect(result.current.error).toBe(null);
+		expect(result.current.error).toBeNull();
 		expect(mockedAxios.get).toHaveBeenCalledWith(
 			'http://localhost:3000/teams/1/leaderboard'
 		);
@@ -80,9 +100,10 @@ describe('useTeamStats Hook', () => {
 
 		vi.mocked(mockedAxios.get).mockResolvedValueOnce({ data: mockData });
 
-		const { result } = renderHook(() =>
-			useTeamStats('1', '2024-01-01', '2024-01-31')
-		);
+		const { result } = renderHook(() => 
+			useTeamStatsQuery('1', '2024-01-01', '2024-01-31'), {
+			wrapper: createWrapper(),
+		});
 
 		await waitFor(() => {
 			expect(result.current.isLoading).toBe(false);
@@ -96,17 +117,17 @@ describe('useTeamStats Hook', () => {
 
 	it('should handle errors properly', async () => {
 		const errorMessage = 'Team not found';
-		vi.mocked(mockedAxios.get).mockRejectedValueOnce(
-			new Error(errorMessage)
-		);
+		vi.mocked(mockedAxios.get).mockRejectedValueOnce(new Error(errorMessage));
 
-		const { result } = renderHook(() => useTeamStats('999'));
+		const { result } = renderHook(() => useTeamStatsQuery('999'), {
+			wrapper: createWrapper(),
+		});
 
 		await waitFor(() => {
 			expect(result.current.isLoading).toBe(false);
 		});
 
-		expect(result.current.data).toBe(null);
-		expect(result.current.error).toBe(errorMessage);
+		expect(result.current.data).toBeUndefined();
+		expect(result.current.error).toBeTruthy();
 	});
 });

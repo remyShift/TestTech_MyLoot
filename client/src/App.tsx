@@ -1,9 +1,26 @@
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { TeamPage } from './pages/TeamPage';
+
+// Configuration React Query
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 2,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    },
+  },
+});
+
 export default function App() {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">Hello World</h1>
-      </div>
-    </div>
-  )
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <Routes>
+          <Route path="/teams/:id" element={<TeamPage />} />
+          <Route path="/" element={<Navigate to="/teams/1" replace />} />
+        </Routes>
+      </Router>
+    </QueryClientProvider>
+  );
 }

@@ -1,11 +1,30 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactNode } from 'react';
 import { TeamPage } from '../TeamPage';
-import { useTeamStats } from '../../hooks/useTeamStats';
+import { useTeamStatsQuery } from '../../hooks/useTeamStatsQuery';
 
 // Mock du hook
-vi.mock('../../hooks/useTeamStats');
-const mockUseTeamStats = vi.mocked(useTeamStats);
+vi.mock('../../hooks/useTeamStatsQuery');
+const mockUseTeamStatsQuery = vi.mocked(useTeamStatsQuery);
+
+// Wrapper pour React Query
+function createWrapper() {
+	const queryClient = new QueryClient({
+		defaultOptions: {
+			queries: {
+				retry: false,
+			},
+		},
+	});
+	
+	return ({ children }: { children: ReactNode }) => (
+		<QueryClientProvider client={queryClient}>
+			{children}
+		</QueryClientProvider>
+	);
+}
 
 // Mock React Router
 const mockParams = { id: '1' };
@@ -19,25 +38,25 @@ describe('TeamPage Component', () => {
 	});
 
 	it('should display loading state initially', () => {
-		mockUseTeamStats.mockReturnValue({
+		mockUseTeamStatsQuery.mockReturnValue({
 			isLoading: true,
-			data: null,
+			data: undefined,
 			error: null,
-		});
+		} as any);
 
-		render(<TeamPage />);
+		render(<TeamPage />, { wrapper: createWrapper() });
 
 		expect(screen.getByText('Chargement...')).toBeInTheDocument();
 	});
 
 	it('should display error message when there is an error', () => {
-		mockUseTeamStats.mockReturnValue({
+		mockUseTeamStatsQuery.mockReturnValue({
 			isLoading: false,
-			data: null,
-			error: 'Team not found',
-		});
+			data: undefined,
+			error: new Error('Team not found'),
+		} as any);
 
-		render(<TeamPage />);
+		render(<TeamPage />, { wrapper: createWrapper() });
 
 		expect(screen.getByText('Erreur: Team not found')).toBeInTheDocument();
 	});
@@ -63,13 +82,13 @@ describe('TeamPage Component', () => {
 			],
 		};
 
-		mockUseTeamStats.mockReturnValue({
+		mockUseTeamStatsQuery.mockReturnValue({
 			isLoading: false,
 			data: mockData,
 			error: null,
-		});
+		} as any);
 
-		render(<TeamPage />);
+		render(<TeamPage />, { wrapper: createWrapper() });
 
 		expect(screen.getByText('Statistiques de l\'Équipe')).toBeInTheDocument();
 		expect(screen.getByText('Total: 100 coins')).toBeInTheDocument();
@@ -83,13 +102,13 @@ describe('TeamPage Component', () => {
 			members: [],
 		};
 
-		mockUseTeamStats.mockReturnValue({
+		mockUseTeamStatsQuery.mockReturnValue({
 			isLoading: false,
 			data: mockData,
 			error: null,
-		});
+		} as any);
 
-		render(<TeamPage />);
+		render(<TeamPage />, { wrapper: createWrapper() });
 
 		expect(screen.getByText('Total: 0 coins')).toBeInTheDocument();
 		expect(screen.getByText('Aucun membre dans cette équipe')).toBeInTheDocument();

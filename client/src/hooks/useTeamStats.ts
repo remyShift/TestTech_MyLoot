@@ -18,28 +18,27 @@ export function useTeamStats(
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
-		const fetchTeamStats = async () => {
-			setIsLoading(true);
-			setError(null);
+		setIsLoading(true);
+		setError(null);
 
-			try {
-				let url = `http://localhost:3000/teams/${teamId}/leaderboard`;
+		let url = `http://localhost:3000/teams/${teamId}/leaderboard`;
 
-				if (from && to) {
-					url += `?from=${from}&to=${to}`;
-				}
+		if (from && to) {
+			url += `?from=${from}&to=${to}`;
+		}
 
-				const response = await axios.get<TeamStats>(url);
+		axios
+			.get<TeamStats>(url)
+			.then((response) => {
 				setData(response.data);
-			} catch (err: any) {
+			})
+			.catch((err) => {
 				setError(err.message);
 				setData(null);
-			} finally {
+			})
+			.finally(() => {
 				setIsLoading(false);
-			}
-		};
-
-		fetchTeamStats();
+			});
 	}, [teamId, from, to]);
 
 	return { isLoading, data, error };
