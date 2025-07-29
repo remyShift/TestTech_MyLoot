@@ -4,8 +4,8 @@ import { TeamLeaderBoardController } from '@/controllers/teamLeaderBoardControll
 import { TeamStatsService } from '@/services/teamStatsService';
 import { NotFoundError } from '@/utils/errors';
 
-describe('TeamStatsController', () => {
-	describe('getTeamStats', () => {
+describe('TeamLeaderBoardController', () => {
+	describe('getLeaderboard', () => {
 		it('should return 400 when teamId is not a valid number', async () => {
 			const mockService = {
 				getTeamLeaderBoard: jest.fn(),
@@ -21,7 +21,7 @@ describe('TeamStatsController', () => {
 				json: jest.fn(),
 			});
 
-			await controller.getTeamStats(req, res);
+			await controller.getLeaderboard(req, res);
 
 			expect(res.status).toHaveBeenCalledWith(400);
 			expect(res.json).toHaveBeenCalledWith({
@@ -48,7 +48,7 @@ describe('TeamStatsController', () => {
 				json: jest.fn(),
 			});
 
-			await controller.getTeamStats(req, res);
+			await controller.getLeaderboard(req, res);
 
 			expect(res.status).toHaveBeenCalledWith(404);
 			expect(res.json).toHaveBeenCalledWith({
@@ -91,7 +91,7 @@ describe('TeamStatsController', () => {
 				json: jest.fn(),
 			});
 
-			await controller.getTeamStats(req, res);
+			await controller.getLeaderboard(req, res);
 
 			expect(res.status).toHaveBeenCalledWith(200);
 			expect(res.json).toHaveBeenCalledWith({
@@ -135,7 +135,7 @@ describe('TeamStatsController', () => {
 				json: jest.fn(),
 			});
 
-			await controller.getTeamStats(req, res);
+			await controller.getLeaderboard(req, res);
 
 			expect(res.status).toHaveBeenCalledWith(200);
 			expect(res.json).toHaveBeenCalledWith({

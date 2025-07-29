@@ -5,6 +5,11 @@ import { NotFoundError } from '@/utils/errors';
 
 export interface TeamStatsRepository {
 	getTeamMembers(teamId: number): Promise<UserWithStats[]>;
+	getTeamMembersWithDateFilter(
+		teamId: number,
+		startDate: Date,
+		endDate: Date
+	): Promise<UserWithStats[]>;
 }
 
 export class PrismaTeamStatsRepository implements TeamStatsRepository {

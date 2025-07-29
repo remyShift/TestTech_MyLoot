@@ -9,6 +9,10 @@ describe('TeamStatsService', () => {
 				async getTeamMembers() {
 					return [];
 				}
+
+				async getTeamMembersWithDateFilter() {
+					return [];
+				}
 			}
 
 			const fakeRepo = new FakeRepo();
@@ -27,6 +31,10 @@ describe('TeamStatsService', () => {
 						{ id: 1, name: 'John Doe', totalCoins: 0, teamId: 1 },
 						{ id: 2, name: 'Jane Doe', totalCoins: 0, teamId: 1 },
 					];
+				}
+
+				async getTeamMembersWithDateFilter() {
+					return [];
 				}
 			}
 
@@ -49,6 +57,10 @@ describe('TeamStatsService', () => {
 						{ id: 1, name: 'John Doe', totalCoins: 10, teamId: 1 },
 						{ id: 2, name: 'Jane Doe', totalCoins: 20, teamId: 1 },
 					];
+				}
+
+				async getTeamMembersWithDateFilter() {
+					return [];
 				}
 			}
 
@@ -75,6 +87,10 @@ describe('TeamStatsService', () => {
 						{ id: 3, name: 'Joe', totalCoins: 10, teamId: 1 },
 					];
 				}
+
+				async getTeamMembersWithDateFilter() {
+					return [];
+				}
 			}
 
 			const service = new TeamStatsService(new FakeRepo());
@@ -98,6 +114,10 @@ describe('TeamStatsService', () => {
 						{ id: 2, name: 'Jane', totalCoins: 30, teamId: 1 },
 						{ id: 3, name: 'Joe', totalCoins: 10, teamId: 1 },
 					];
+				}
+
+				async getTeamMembersWithDateFilter() {
+					return [];
 				}
 			}
 

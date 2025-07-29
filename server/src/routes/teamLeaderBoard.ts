@@ -6,12 +6,12 @@ import { PrismaClient } from '@prisma/client';
 
 const router = Router();
 
-router.get('/teams/:id/stats', (req, res) => {
+router.get('/teams/:id/leaderboard', (req, res) => {
 	const service = new TeamStatsService(
 		new PrismaTeamStatsRepository(new PrismaClient())
 	);
 	const controller = new TeamLeaderBoardController(service);
-	controller.getTeamStats(req, res);
+	controller.getLeaderboard(req, res);
 });
 
 export { router as teamLeaderBoardRouter };

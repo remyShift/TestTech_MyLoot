@@ -6,7 +6,7 @@ import { ErrorHandler } from '@/utils/errors';
 export class TeamLeaderBoardController {
 	constructor(private readonly teamStatsService: TeamStatsService) {}
 
-	async getTeamStats(req: Request, res: Response) {
+	async getLeaderboard(req: Request, res: Response) {
 		const { id } = req.params;
 
 		return TeamIdValidator.validate(id)
