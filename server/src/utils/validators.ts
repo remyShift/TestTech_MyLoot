@@ -77,7 +77,7 @@ export class AmountValidator {
 	static validate(amount: any): Promise<number> {
 		return new Promise((resolve, reject) => {
 			const parsedAmount = parseFloat(amount);
-			if (!this.isPositiveNumber(parsedAmount)) {
+			if (!this.isPositiveInteger(parsedAmount)) {
 				reject(new ValidationError('Amount must be a positive number'));
 			} else {
 				resolve(parsedAmount);
@@ -85,7 +85,7 @@ export class AmountValidator {
 		});
 	}
 
-	private static isPositiveNumber(amount: number): boolean {
-		return !isNaN(amount) && amount > 0;
+	private static isPositiveInteger(amount: number): boolean {
+		return Number.isInteger(amount) && amount > 0;
 	}
 }
