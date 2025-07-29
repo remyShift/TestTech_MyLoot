@@ -50,11 +50,8 @@ export class DateValidator {
 			result.to = toDate;
 		}
 
-		// Validation que from < to si les deux sont présentes
 		if (result.from && result.to && result.from >= result.to) {
-			throw new ValidationError(
-				'From date must be earlier than to date'
-			);
+			throw new ValidationError('From date must be earlier than to date');
 		}
 
 		return result;
@@ -71,22 +68,31 @@ export class PaginationValidator {
 		if (page) {
 			const parsedPage = parseInt(page);
 			if (!Number.isInteger(parsedPage) || parsedPage < 1) {
-				throw new ValidationError('Page must be a positive integer starting from 1');
+				throw new ValidationError(
+					'Page must be a positive integer starting from 1'
+				);
 			}
 			result.page = parsedPage;
 		}
 
 		if (limit) {
 			const parsedLimit = parseInt(limit);
-			if (!Number.isInteger(parsedLimit) || parsedLimit < 1 || parsedLimit > 100) {
-				throw new ValidationError('Limit must be a positive integer between 1 and 100');
+			if (
+				!Number.isInteger(parsedLimit) ||
+				parsedLimit < 1 ||
+				parsedLimit > 100
+			) {
+				throw new ValidationError(
+					'Limit must be a positive integer between 1 and 100'
+				);
 			}
 			result.limit = parsedLimit;
 		}
 
-		// Si page est fournie, limit doit l'être aussi
 		if (result.page && !result.limit) {
-			throw new ValidationError('Limit is required when page is provided');
+			throw new ValidationError(
+				'Limit is required when page is provided'
+			);
 		}
 
 		return result;
@@ -117,14 +123,17 @@ export class AmountValidator {
 		return new Promise((resolve, reject) => {
 			const parsedAmount = parseFloat(amount);
 			if (!this.isValidAmount(parsedAmount)) {
-				reject(new ValidationError('Amount must be a valid number (can be negative for debits)'));
+				reject(
+					new ValidationError(
+						'Amount must be a valid number (can be negative for debits)'
+					)
+				);
 			} else {
 				resolve(parsedAmount);
 			}
 		});
 	}
 
-	// Permettre les montants négatifs pour les débits
 	private static isValidAmount(amount: number): boolean {
 		return Number.isInteger(amount) && !isNaN(amount);
 	}
