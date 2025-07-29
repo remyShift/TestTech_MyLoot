@@ -17,11 +17,21 @@ export class NotFoundError extends Error {
 export class ErrorHandler {
 	static handleControllerError(error: Error, res: Response): void {
 		if (error instanceof ValidationError) {
-			res.status(400).json({ error: error.message });
+			res.status(400).json({
+				message: error.message,
+				status: 400,
+			});
 		} else if (error instanceof NotFoundError) {
-			res.status(404).json({ error: error.message });
+			res.status(404).json({
+				message: error.message,
+				status: 404,
+			});
 		} else {
-			res.status(500).json({ error: 'Internal server error' });
+			console.error('Unexpected error:', error);
+			res.status(500).json({
+				message: 'Internal server error',
+				status: 500,
+			});
 		}
 	}
 }

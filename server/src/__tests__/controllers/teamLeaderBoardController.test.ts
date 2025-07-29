@@ -26,7 +26,8 @@ describe('TeamLeaderBoardController', () => {
 
 			expect(res.status).toHaveBeenCalledWith(400);
 			expect(res.json).toHaveBeenCalledWith({
-				error: 'Team ID must be a positive integer',
+				message: 'Team ID must be a positive integer',
+				status: 400,
 			});
 		});
 
@@ -54,7 +55,8 @@ describe('TeamLeaderBoardController', () => {
 
 			expect(res.status).toHaveBeenCalledWith(404);
 			expect(res.json).toHaveBeenCalledWith({
-				error: "Team with id 1 doesn't exist",
+				message: "Team with id 1 doesn't exist",
+				status: 404,
 			});
 		});
 
@@ -171,7 +173,8 @@ describe('TeamLeaderBoardController', () => {
 
 			expect(res.status).toHaveBeenCalledWith(400);
 			expect(res.json).toHaveBeenCalledWith({
-				error: 'Invalid date format for from parameter',
+				message: 'Invalid date format for from parameter',
+				status: 400,
 			});
 		});
 
@@ -196,7 +199,8 @@ describe('TeamLeaderBoardController', () => {
 
 			expect(res.status).toHaveBeenCalledWith(400);
 			expect(res.json).toHaveBeenCalledWith({
-				error: 'Invalid date format for to parameter',
+				message: 'Invalid date format for to parameter',
+				status: 400,
 			});
 		});
 
