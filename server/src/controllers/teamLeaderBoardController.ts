@@ -16,15 +16,11 @@ export class TeamLeaderBoardController {
 				return DateValidator.validateOptionalDates(from, to).then(
 					async (dates) => {
 						const teamStats =
-							dates.from && dates.to
-								? await this.teamStatsService.getTeamLeaderBoardWithDateFilter(
-										teamId,
-										dates.from,
-										dates.to
-								  )
-								: await this.teamStatsService.getTeamLeaderBoard(
-										teamId
-								  );
+							await this.teamStatsService.getTeamLeaderBoard(
+								teamId,
+								dates.from,
+								dates.to
+							);
 
 						res.status(200).json(teamStats);
 					}

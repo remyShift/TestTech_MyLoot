@@ -10,33 +10,15 @@ interface TeamStats {
 export class TeamStatsService {
 	constructor(private readonly teamStatsRepository: TeamStatsRepository) {}
 
-	async getTeamLeaderBoard(teamId: number): Promise<TeamLeaderboard> {
-		const membersWithTotal = await this.getRawStatsForTeam(teamId);
-
-		const total = membersWithTotal.total;
-
-		const members = await this.insertMembersPercent(
-			membersWithTotal.members
-		);
-
-		const sortedMembers = await this.sortMembersByTotalEarnings(members);
-
-		return {
-			total,
-			members: sortedMembers,
-		};
-	}
-
-	async getTeamLeaderBoardWithDateFilter(
+	async getTeamLeaderBoard(
 		teamId: number,
-		from: Date,
-		to: Date
+		from?: Date,
+		to?: Date
 	): Promise<TeamLeaderboard> {
-		const membersWithTotal = await this.getRawStatsForTeamWithDateFilter(
-			teamId,
-			from,
-			to
-		);
+		const membersWithTotal =
+			from && to
+				? await this.getRawStatsForTeamWithDateFilter(teamId, from, to)
+				: await this.getRawStatsForTeam(teamId);
 
 		const total = membersWithTotal.total;
 

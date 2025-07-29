@@ -53,3 +53,39 @@ export class DateValidator {
 		return result;
 	}
 }
+
+export class UserIdValidator {
+	static validate(userId: any): Promise<number> {
+		return new Promise((resolve, reject) => {
+			const parsedUserId = parseInt(userId);
+			if (!this.isPositiveInteger(parsedUserId)) {
+				reject(
+					new ValidationError('User ID must be a positive integer')
+				);
+			} else {
+				resolve(parsedUserId);
+			}
+		});
+	}
+
+	private static isPositiveInteger(userId: number): boolean {
+		return Number.isInteger(userId) && userId > 0;
+	}
+}
+
+export class AmountValidator {
+	static validate(amount: any): Promise<number> {
+		return new Promise((resolve, reject) => {
+			const parsedAmount = parseFloat(amount);
+			if (!this.isPositiveNumber(parsedAmount)) {
+				reject(new ValidationError('Amount must be a positive number'));
+			} else {
+				resolve(parsedAmount);
+			}
+		});
+	}
+
+	private static isPositiveNumber(amount: number): boolean {
+		return !isNaN(amount) && amount > 0;
+	}
+}

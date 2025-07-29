@@ -155,7 +155,6 @@ describe('TeamLeaderBoardController', () => {
 		it('should return 400 when from date parameter is invalid', async () => {
 			const mockService = {
 				getTeamLeaderBoard: jest.fn(),
-				getTeamLeaderBoardWithDateFilter: jest.fn(),
 			} as unknown as TeamStatsService;
 
 			const controller = new TeamLeaderBoardController(mockService);
@@ -181,7 +180,6 @@ describe('TeamLeaderBoardController', () => {
 		it('should return 400 when to date parameter is invalid', async () => {
 			const mockService = {
 				getTeamLeaderBoard: jest.fn(),
-				getTeamLeaderBoardWithDateFilter: jest.fn(),
 			} as unknown as TeamStatsService;
 
 			const controller = new TeamLeaderBoardController(mockService);
@@ -226,10 +224,7 @@ describe('TeamLeaderBoardController', () => {
 			};
 
 			const mockService = {
-				getTeamLeaderBoard: jest.fn(),
-				getTeamLeaderBoardWithDateFilter: jest
-					.fn()
-					.mockResolvedValue(mockStats),
+				getTeamLeaderBoard: jest.fn().mockResolvedValue(mockStats),
 			} as unknown as TeamStatsService;
 
 			const controller = new TeamLeaderBoardController(mockService);
@@ -245,9 +240,7 @@ describe('TeamLeaderBoardController', () => {
 
 			await controller.getLeaderboard(req, res);
 
-			expect(
-				mockService.getTeamLeaderBoardWithDateFilter
-			).toHaveBeenCalledWith(
+			expect(mockService.getTeamLeaderBoard).toHaveBeenCalledWith(
 				1,
 				new Date('2024-01-01'),
 				new Date('2024-01-31')
@@ -264,7 +257,6 @@ describe('TeamLeaderBoardController', () => {
 
 			const mockService = {
 				getTeamLeaderBoard: jest.fn().mockResolvedValue(mockStats),
-				getTeamLeaderBoardWithDateFilter: jest.fn(),
 			} as unknown as TeamStatsService;
 
 			const controller = new TeamLeaderBoardController(mockService);
@@ -280,10 +272,11 @@ describe('TeamLeaderBoardController', () => {
 
 			await controller.getLeaderboard(req, res);
 
-			expect(mockService.getTeamLeaderBoard).toHaveBeenCalledWith(1);
-			expect(
-				mockService.getTeamLeaderBoardWithDateFilter
-			).not.toHaveBeenCalled();
+			expect(mockService.getTeamLeaderBoard).toHaveBeenCalledWith(
+				1,
+				undefined,
+				undefined
+			);
 			expect(res.status).toHaveBeenCalledWith(200);
 			expect(res.json).toHaveBeenCalledWith(mockStats);
 		});
