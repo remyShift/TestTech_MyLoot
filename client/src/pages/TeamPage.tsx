@@ -4,6 +4,7 @@ import { useTeamStatsQuery } from '../hooks/useTeamStatsQuery';
 import { Loader } from '../components/Loader';
 import { MemberRow } from '../components/MemberRow';
 import { DateRangePicker } from '../components/DateRangePicker';
+import { DevToolbar } from '../components/DevToolbar';
 
 export function TeamPage() {
 	const { id } = useParams<{ id: string }>();
@@ -48,6 +49,7 @@ export function TeamPage() {
 						</button>
 					</div>
 				</div>
+				<DevToolbar />
 			</div>
 		);
 	}
@@ -70,6 +72,7 @@ export function TeamPage() {
 						</button>
 					</div>
 				</div>
+				<DevToolbar />
 			</div>
 		);
 	}
@@ -119,6 +122,7 @@ export function TeamPage() {
 					)}
 				</div>
 			</div>
+			<DevToolbar />
 		</div>
 	);
 }

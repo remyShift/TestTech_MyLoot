@@ -48,7 +48,7 @@ describe('TeamPage Error Cases', () => {
 		render(<TeamPage />, { wrapper: createWrapper() });
 
 		expect(screen.getByText(/Team with id 999 doesn't exist/i)).toBeInTheDocument();
-		expect(screen.getByText(/erreur/i)).toBeInTheDocument();
+		expect(screen.getByText('Équipe introuvable')).toBeInTheDocument();
 	});
 
 	it('should display specific error message for invalid team ID', () => {
@@ -91,7 +91,7 @@ describe('TeamPage Error Cases', () => {
 
 		render(<TeamPage />, { wrapper: createWrapper() });
 
-		expect(screen.getByText('Aucun membre dans cette équipe')).toBeInTheDocument();
+		expect(screen.getByText('Équipe vide')).toBeInTheDocument();
 		expect(screen.getByText('Total: 0 coins')).toBeInTheDocument();
 		expect(screen.getByText('Statistiques de l\'Équipe')).toBeInTheDocument();
 	});

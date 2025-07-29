@@ -58,7 +58,8 @@ describe('TeamPage Component', () => {
 
 		render(<TeamPage />, { wrapper: createWrapper() });
 
-		expect(screen.getByText('Erreur: Team not found')).toBeInTheDocument();
+		expect(screen.getByText('Team not found')).toBeInTheDocument();
+		expect(screen.getByText('Équipe introuvable')).toBeInTheDocument();
 	});
 
 	it('should display team stats and members when data is loaded', async () => {
@@ -111,6 +112,6 @@ describe('TeamPage Component', () => {
 		render(<TeamPage />, { wrapper: createWrapper() });
 
 		expect(screen.getByText('Total: 0 coins')).toBeInTheDocument();
-		expect(screen.getByText('Aucun membre dans cette équipe')).toBeInTheDocument();
+		expect(screen.getByText('Équipe vide')).toBeInTheDocument();
 	});
 });
