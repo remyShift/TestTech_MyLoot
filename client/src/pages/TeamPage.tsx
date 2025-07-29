@@ -23,9 +23,6 @@ export function TeamPage() {
 		return <Loader />;
 	}
 
-	console.log(error);
-	console.log(data);
-
 	if (error) {
 		return (
 			<div className="min-h-screen bg-gray-100 flex items-center justify-center">
