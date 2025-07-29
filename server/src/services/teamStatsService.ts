@@ -13,12 +13,20 @@ export class TeamStatsService {
 	async getTeamLeaderBoard(
 		teamId: number,
 		from?: Date,
-		to?: Date
+		to?: Date,
+		page?: number,
+		limit?: number
 	): Promise<TeamLeaderboard> {
 		const membersWithTotal =
 			from && to
-				? await this.getRawStatsForTeamWithDateFilter(teamId, from, to)
-				: await this.getRawStatsForTeam(teamId);
+				? await this.getRawStatsForTeamWithDateFilter(
+						teamId,
+						from,
+						to,
+						page,
+						limit
+				  )
+				: await this.getRawStatsForTeam(teamId, page, limit);
 
 		const total = membersWithTotal.total;
 
@@ -28,9 +36,31 @@ export class TeamStatsService {
 
 		const sortedMembers = await this.sortMembersByTotalEarnings(members);
 
+		let pagination = undefined;
+		if (page && limit) {
+			const totalMembers =
+				from && to
+					? await this.teamStatsRepository.getTeamMembersCountWithDateFilter(
+							teamId,
+							from,
+							to
+					  )
+					: await this.teamStatsRepository.getTeamMembersCount(
+							teamId
+					  );
+
+			pagination = {
+				page,
+				limit,
+				totalPages: Math.ceil(totalMembers / limit),
+				totalMembers,
+			};
+		}
+
 		return {
 			total,
 			members: sortedMembers,
+			pagination,
 		};
 	}
 
@@ -40,7 +70,11 @@ export class TeamStatsService {
 		return members.sort((a, b) => b.totalCoins - a.totalCoins);
 	}
 
-	async getRawStatsForTeam(teamId: number): Promise<TeamStats> {
+	async getRawStatsForTeam(
+		teamId: number,
+		page?: number,
+		limit?: number
+	): Promise<TeamStats> {
 		const members = await this.teamStatsRepository.getTeamMembers(teamId);
 
 		return {
@@ -55,13 +89,17 @@ export class TeamStatsService {
 	async getRawStatsForTeamWithDateFilter(
 		teamId: number,
 		from: Date,
-		to: Date
+		to: Date,
+		page?: number,
+		limit?: number
 	): Promise<TeamStats> {
 		const members =
 			await this.teamStatsRepository.getTeamMembersWithDateFilter(
 				teamId,
 				from,
-				to
+				to,
+				page,
+				limit
 			);
 
 		return {

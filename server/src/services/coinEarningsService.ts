@@ -1,13 +1,18 @@
-import { CoinEarning } from '@/types/models';
 import { CoinEarningsRepository } from '@/repositories/coinEarningsRepository';
+import { CoinEarning } from '@/types/models';
 
 export class CoinEarningsService {
-	constructor(private readonly coinEarningsRepository: CoinEarningsRepository) {}
+	constructor(
+		private readonly coinEarningsRepository: CoinEarningsRepository
+	) {}
 
 	async createCoinEarning(
 		userId: number,
 		amount: number
 	): Promise<CoinEarning> {
-		return this.coinEarningsRepository.createCoinEarning(userId, amount);
+		return await this.coinEarningsRepository.createCoinEarning(
+			userId,
+			amount
+		);
 	}
 }

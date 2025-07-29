@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useTeamStatsQuery } from '@/hooks/useTeamStatsQuery';
 import { Loader } from '@/components/Loader';
 import { MemberRow } from '@/components/MemberRow';
@@ -13,7 +13,12 @@ import CardTitle from '@/components/cards/CardTitle';
 
 export function TeamPage() {
 	const { id } = useParams<{ id: string }>();
-	const [dateRange, setDateRange] = useState<{ from?: string; to?: string }>({});
+	const [searchParams, setSearchParams] = useSearchParams();
+	
+	const [dateRange, setDateRange] = useState<{ from?: string; to?: string }>({
+		from: searchParams.get('from') || undefined,
+		to: searchParams.get('to') || undefined,
+	});
 	
 	const { isLoading, data, error } = useTeamStatsQuery(
 		id || '', 
@@ -22,8 +27,31 @@ export function TeamPage() {
 	);
 
 	const handleDateFilter = (from?: string, to?: string) => {
-		setDateRange({ from, to });
+		const newDateRange = { from, to };
+		setDateRange(newDateRange);
+		
+		const newParams = new URLSearchParams(searchParams);
+		if (from) {
+			newParams.set('from', from);
+		} else {
+			newParams.delete('from');
+		}
+		if (to) {
+			newParams.set('to', to);
+		} else {
+			newParams.delete('to');
+		}
+		setSearchParams(newParams);
 	};
+
+	useEffect(() => {
+		const fromUrl = searchParams.get('from') || undefined;
+		const toUrl = searchParams.get('to') || undefined;
+		
+		if (fromUrl !== dateRange.from || toUrl !== dateRange.to) {
+			setDateRange({ from: fromUrl, to: toUrl });
+		}
+	}, [searchParams, dateRange.from, dateRange.to]);
 
 	if (isLoading) {
 		return <Loader />;
@@ -38,7 +66,7 @@ export function TeamPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-gray-100 p-8">
+		<div className="h-screen bg-gray-100 p-8">
 			<div className="max-w-4xl mx-auto">
 				<HeaderTeamCard data={data} />
 

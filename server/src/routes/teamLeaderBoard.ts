@@ -2,16 +2,19 @@ import { Router } from 'express';
 import { TeamLeaderBoardController } from '@/controllers/teamLeaderBoardController';
 import { TeamStatsService } from '@/services/teamStatsService';
 import { PrismaTeamStatsRepository } from '@/repositories/teamStatsRepository';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/utils/database';
+import { heavyQueryLimiter } from '@/middleware/rateLimiter';
 
 const router = Router();
 
-router.get('/teams/:id/leaderboard', (req, res) => {
-	const service = new TeamStatsService(
-		new PrismaTeamStatsRepository(new PrismaClient())
-	);
-	const controller = new TeamLeaderBoardController(service);
-	controller.getLeaderboard(req, res);
+const teamStatsRepository = new PrismaTeamStatsRepository(prisma);
+const teamStatsService = new TeamStatsService(teamStatsRepository);
+const teamLeaderBoardController = new TeamLeaderBoardController(
+	teamStatsService
+);
+
+router.get('/teams/:id/leaderboard', heavyQueryLimiter, (req, res) => {
+	teamLeaderBoardController.getLeaderboard(req, res);
 });
 
 export { router as teamLeaderBoardRouter };

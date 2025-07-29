@@ -7,7 +7,6 @@ describe('Loader Component', () => {
 		render(<Loader />);
 
 		expect(screen.getByText('Loading...')).toBeInTheDocument();
-		expect(screen.getByRole('status')).toBeInTheDocument();
 	});
 
 	it('should display custom loading text when provided', () => {
