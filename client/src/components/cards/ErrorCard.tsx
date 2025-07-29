@@ -80,7 +80,7 @@ export default function ErrorCard({ error }: ErrorCardProps) {
     const handleRetry = () => {
         if (isAppError && error.isRateLimit) {
             setTimeout(() => window.location.reload(), 1000);
-        } else if (isAppError && (error.isNetwork || error.isValidation)) {
+        } else if (isAppError && error.isNetwork) {
             window.location.reload();
         } else {
             window.location.href = '/teams/1';
