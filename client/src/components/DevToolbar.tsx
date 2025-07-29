@@ -8,12 +8,13 @@ export function DevToolbar() {
 	}
 
 	const testCases = [
-		{ label: 'Équipe 1 (données)', url: '/teams/1' },
-		{ label: 'Équipe 2 (données)', url: '/teams/2' },
-		{ label: 'Équipe 3 (données)', url: '/teams/3' },
-		{ label: 'Équipe 4 (données)', url: '/teams/4' },
-		{ label: 'Équipe 999 (404)', url: '/teams/999' },
-		{ label: 'ID invalide', url: '/teams/invalid' },
+		{ label: 'Team 1 (data)', url: '/teams/1' },
+		{ label: 'Team 2 (data)', url: '/teams/2' },
+		{ label: 'Team 3 (data)', url: '/teams/3' },
+		{ label: 'Team 4 (data)', url: '/teams/4' },
+		{ label: 'Team 5 (empty)', url: '/teams/5' },
+		{ label: 'Team 999 (404)', url: '/teams/999' },
+		{ label: 'Invalid ID', url: '/teams/invalid' },
 	];
 
 	return (
@@ -22,7 +23,7 @@ export function DevToolbar() {
 				<button
 					onClick={() => setIsOpen(true)}
 					className="bg-purple-600 text-white p-3 rounded-full shadow-lg hover:bg-purple-700 transition-colors"
-					title="Debug: Tester les cas d'erreur"
+					title="Debug: Test error cases"
 				>
 					🔧
 				</button>
@@ -38,7 +39,7 @@ export function DevToolbar() {
 						</button>
 					</div>
 					<div className="space-y-2">
-						<p className="text-sm text-gray-600 mb-2">Tester les cas :</p>
+						<p className="text-sm text-gray-600 mb-2">Test cases :</p>
 						{testCases.map((testCase, index) => (
 							<button
 								key={index}
