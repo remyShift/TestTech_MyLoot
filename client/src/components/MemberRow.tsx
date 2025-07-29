@@ -32,23 +32,17 @@ export function MemberRow({ member, rank }: MemberRowProps) {
 	return (
 		<div 
 			className={`p-4 rounded-lg border-2 ${getRankColor(rank)} hover:shadow-md transition-shadow`}
-			role="listitem"
-			aria-label={`Rank ${rank}: ${member.name} with ${member.totalCoins} coins (${member.percent}% of team total)`}
-			tabIndex={0}
 		>
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-4">
 					<div className="flex items-center gap-2">
 						<span 
 							className="text-2xl" 
-							role="img" 
-							aria-label={`Rank ${rank} ${rank <= 3 ? 'medal' : 'member'}`}
 						>
 							{getRankEmoji(rank)}
 						</span>
 						<span 
 							className="text-lg font-bold text-gray-600"
-							aria-label={`Position ${rank}`}
 						>
 							#{rank}
 						</span>

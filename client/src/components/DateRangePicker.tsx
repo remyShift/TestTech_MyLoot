@@ -45,8 +45,6 @@ export function DateRangePicker({ onFilter }: DateRangePickerProps) {
 	return (
 		<div 
 			className="bg-white rounded-lg shadow-lg p-6 mb-6"
-			role="region"
-			aria-labelledby="date-filter-heading"
 			onKeyDown={handleKeyDown}
 		>
 			<h2 
@@ -67,8 +65,6 @@ export function DateRangePicker({ onFilter }: DateRangePickerProps) {
 						value={fromDate}
 						onChange={(e) => setFromDate(e.target.value)}
 						className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-						aria-describedby={error ? "date-error" : undefined}
-						aria-invalid={!!error}
 					/>
 				</div>
 				
@@ -82,8 +78,6 @@ export function DateRangePicker({ onFilter }: DateRangePickerProps) {
 						value={toDate}
 						onChange={(e) => setToDate(e.target.value)}
 						className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-						aria-describedby={error ? "date-error" : undefined}
-						aria-invalid={!!error}
 					/>
 				</div>
 				
@@ -92,14 +86,12 @@ export function DateRangePicker({ onFilter }: DateRangePickerProps) {
 						ref={filterButtonRef}
 						onClick={handleFilter}
 						className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-						aria-describedby="filter-help"
 					>
 						Filter
 					</button>
 					<button
 						onClick={handleReset}
 						className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
-						aria-label="Reset date filters"
 					>
 						Reset
 					</button>
@@ -110,8 +102,6 @@ export function DateRangePicker({ onFilter }: DateRangePickerProps) {
 				<div 
 					id="date-error"
 					className="mt-4 p-3 bg-red-100 border border-red-300 rounded-md"
-					role="alert"
-					aria-live="polite"
 				>
 					<p className="text-red-700 text-sm">{error}</p>
 				</div>
