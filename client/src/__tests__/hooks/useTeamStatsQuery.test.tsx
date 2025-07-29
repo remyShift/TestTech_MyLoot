@@ -12,6 +12,7 @@ vi.mock('axios', () => ({
 }));
 
 const mockedAxios = axios;
+const baseUrl = 'http://localhost:3000';
 
 function createWrapper() {
 	const queryClient = new QueryClient({
@@ -80,7 +81,7 @@ describe('useTeamStatsQuery Hook', () => {
 		expect(result.current.data).toEqual(mockData);
 		expect(result.current.error).toBeNull();
 		expect(mockedAxios.get).toHaveBeenCalledWith(
-			'http://localhost:3000/teams/1/leaderboard'
+			`${baseUrl}/teams/1/leaderboard`
 		);
 	});
 
@@ -111,7 +112,7 @@ describe('useTeamStatsQuery Hook', () => {
 
 		expect(result.current.data).toEqual(mockData);
 		expect(mockedAxios.get).toHaveBeenCalledWith(
-			'http://localhost:3000/teams/1/leaderboard?from=2024-01-01&to=2024-01-31'
+			`${baseUrl}/teams/1/leaderboard?from=2024-01-01&to=2024-01-31`
 		);
 	});
 

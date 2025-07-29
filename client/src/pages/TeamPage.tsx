@@ -24,12 +24,29 @@ export function TeamPage() {
 	}
 
 	if (error) {
+		const errorMessage = error instanceof Error ? error.message : 'Une erreur est survenue';
+		const is404 = errorMessage.includes("doesn't exist") || errorMessage.includes("not found");
+		
 		return (
 			<div className="min-h-screen bg-gray-100 flex items-center justify-center">
-				<div className="bg-white p-8 rounded-lg shadow-lg">
-					<h1 className="text-2xl font-bold text-red-600 mb-4">
-						Erreur: {error instanceof Error ? error.message : 'Une erreur est survenue'}
-					</h1>
+				<div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full mx-4">
+					<div className="text-center">
+						<div className="text-6xl mb-4">
+							{is404 ? '🔍' : '⚠️'}
+						</div>
+						<h1 className="text-3xl font-bold text-red-600 mb-4">
+							{is404 ? 'Équipe introuvable' : 'Erreur'}
+						</h1>
+						<p className="text-gray-600 mb-6">
+							{errorMessage}
+						</p>
+						<button
+							onClick={() => window.location.href = '/teams/1'}
+							className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+						>
+							Retour à l'équipe 1
+						</button>
+					</div>
 				</div>
 			</div>
 		);
@@ -38,8 +55,20 @@ export function TeamPage() {
 	if (!data) {
 		return (
 			<div className="min-h-screen bg-gray-100 flex items-center justify-center">
-				<div className="bg-white p-8 rounded-lg shadow-lg">
-					<h1 className="text-2xl font-bold text-gray-800 mb-4">Aucune donnée disponible</h1>
+				<div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full mx-4">
+					<div className="text-center">
+						<div className="text-6xl mb-4">📊</div>
+						<h1 className="text-2xl font-bold text-gray-800 mb-4">Aucune donnée disponible</h1>
+						<p className="text-gray-600 mb-6">
+							Les données de cette équipe n'ont pas pu être chargées.
+						</p>
+						<button
+							onClick={() => window.location.reload()}
+							className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+						>
+							Réessayer
+						</button>
+					</div>
 				</div>
 			</div>
 		);
@@ -61,7 +90,22 @@ export function TeamPage() {
 					<h2 className="text-2xl font-bold text-gray-800 mb-4">Classement des Membres</h2>
 					
 					{data.members.length === 0 ? (
-						<p className="text-gray-600 text-center py-8">Aucun membre dans cette équipe</p>
+						<div className="text-center py-12">
+							<div className="text-6xl mb-4">👥</div>
+							<h3 className="text-xl font-semibold text-gray-700 mb-2">Équipe vide</h3>
+							<p className="text-gray-600 max-w-md mx-auto">
+								Cette équipe n'a pas encore de membres ou aucun membre n'a gagné de coins 
+								{dateRange.from && dateRange.to ? ' dans la période sélectionnée' : ''}.
+							</p>
+							{dateRange.from && dateRange.to && (
+								<button
+									onClick={() => setDateRange({})}
+									className="mt-4 px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+								>
+									Voir toutes les données
+								</button>
+							)}
+						</div>
 					) : (
 						<div className="space-y-4">
 							{data.members.map((member, index) => (
