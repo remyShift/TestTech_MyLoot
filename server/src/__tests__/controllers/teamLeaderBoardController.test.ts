@@ -243,7 +243,9 @@ describe('TeamLeaderBoardController', () => {
 			expect(mockService.getTeamLeaderBoard).toHaveBeenCalledWith(
 				1,
 				new Date('2024-01-01'),
-				new Date('2024-01-31')
+				new Date('2024-01-31'),
+				undefined,
+				undefined
 			);
 			expect(res.status).toHaveBeenCalledWith(200);
 			expect(res.json).toHaveBeenCalledWith(mockStats);
@@ -274,6 +276,8 @@ describe('TeamLeaderBoardController', () => {
 
 			expect(mockService.getTeamLeaderBoard).toHaveBeenCalledWith(
 				1,
+				undefined,
+				undefined,
 				undefined,
 				undefined
 			);
