@@ -9,8 +9,12 @@ vi.mock('@/hooks/useTeamStatsQuery');
 const mockUseTeamStatsQuery = vi.mocked(useTeamStatsQuery);
 
 let mockParams = { id: '1' };
+let mockSearchParams = new URLSearchParams();
+const mockSetSearchParams = vi.fn();
+
 vi.mock('react-router-dom', () => ({
 	useParams: () => mockParams,
+	useSearchParams: () => [mockSearchParams, mockSetSearchParams],
 }));
 
 function createWrapper() {
@@ -33,6 +37,7 @@ describe('TeamPage Error Cases', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
 		mockParams = { id: '1' };
+		mockSearchParams = new URLSearchParams();
 	});
 
 	it('should display 404 error when team does not exist', () => {

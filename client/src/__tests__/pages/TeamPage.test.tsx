@@ -25,13 +25,18 @@ function createWrapper() {
 }
 
 const mockParams = { id: '1' };
+let mockSearchParams = new URLSearchParams();
+const mockSetSearchParams = vi.fn();
+
 vi.mock('react-router-dom', () => ({
 	useParams: () => mockParams,
+	useSearchParams: () => [mockSearchParams, mockSetSearchParams],
 }));
 
 describe('TeamPage Component', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
+		mockSearchParams = new URLSearchParams();
 	});
 
 	it('should display loading state initially', () => {

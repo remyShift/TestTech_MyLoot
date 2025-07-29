@@ -17,7 +17,7 @@ describe('MemberRow Component', () => {
 
 		expect(screen.getByText('Alice Champion')).toBeInTheDocument();
 		expect(screen.getByText('150 coins')).toBeInTheDocument();
-		expect(screen.getByText('75%')).toBeInTheDocument();
+		expect(screen.getByText('75% of team')).toBeInTheDocument();
 		expect(screen.getByText('#1')).toBeInTheDocument();
 	});
 
@@ -37,6 +37,6 @@ describe('MemberRow Component', () => {
 		render(<MemberRow member={zeroMember} rank={5} />);
 
 		expect(screen.getByText('0 coins')).toBeInTheDocument();
-		expect(screen.getByText('0%')).toBeInTheDocument();
+		expect(screen.getByText('0% of team')).toBeInTheDocument();
 	});
 });

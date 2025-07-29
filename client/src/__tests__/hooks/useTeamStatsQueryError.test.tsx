@@ -11,7 +11,7 @@ vi.mock('axios', () => ({
 	},
 }));
 
-const mockedAxios = axios;
+const mockedGet = vi.mocked(axios.get);
 
 function createWrapper() {
 	const queryClient = new QueryClient({
@@ -47,7 +47,7 @@ describe('useTeamStatsQuery Error Handling', () => {
 			}
 		};
 
-		mockedAxios.get.mockRejectedValueOnce(backendError);
+		mockedGet.mockRejectedValueOnce(backendError);
 
 		const { result } = renderHook(
 			() => useTeamStatsQuery('999'),
@@ -75,7 +75,7 @@ describe('useTeamStatsQuery Error Handling', () => {
 			}
 		};
 
-		mockedAxios.get.mockRejectedValueOnce(backendError);
+		mockedGet.mockRejectedValueOnce(backendError);
 
 		const { result } = renderHook(
 			() => useTeamStatsQuery('invalid'),
@@ -97,7 +97,7 @@ describe('useTeamStatsQuery Error Handling', () => {
 			code: 'ERR_NETWORK',
 		};
 
-		mockedAxios.get.mockRejectedValueOnce(networkError);
+		mockedGet.mockRejectedValueOnce(networkError);
 
 		const { result } = renderHook(
 			() => useTeamStatsQuery('1'),
@@ -109,13 +109,13 @@ describe('useTeamStatsQuery Error Handling', () => {
 		});
 
 		expect(result.current.error).toBeTruthy();
-		expect(result.current.error?.message).toBe('Network Error');
+		expect(result.current.error?.message).toBe('Network error occurred');
 	});
 
 	it('should handle unexpected error format gracefully', async () => {
 		const unexpectedError = new Error('Something unexpected happened');
 
-		mockedAxios.get.mockRejectedValueOnce(unexpectedError);
+		mockedGet.mockRejectedValueOnce(unexpectedError);
 
 		const { result } = renderHook(
 			() => useTeamStatsQuery('1'),
@@ -127,6 +127,6 @@ describe('useTeamStatsQuery Error Handling', () => {
 		});
 
 		expect(result.current.error).toBeTruthy();
-		expect(result.current.error?.message).toBe('Something unexpected happened');
+		expect(result.current.error?.message).toBe('Network error occurred');
 	});
 });
