@@ -9,9 +9,9 @@ describe('DateRangePicker Component', () => {
 		
 		render(<DateRangePicker onFilter={mockOnFilter} />);
 
-		expect(screen.getByLabelText(/du/i)).toBeInTheDocument();
-		expect(screen.getByLabelText(/au/i)).toBeInTheDocument();
-		expect(screen.getByRole('button', { name: /filtrer/i })).toBeInTheDocument();
+		expect(screen.getByLabelText(/from/i)).toBeInTheDocument();
+		expect(screen.getByLabelText(/to/i)).toBeInTheDocument();
+		expect(screen.getByRole('button', { name: /filter/i })).toBeInTheDocument();
 	});
 
 	it('should call onFilter when dates are selected and filter button is clicked', async () => {
@@ -20,9 +20,9 @@ describe('DateRangePicker Component', () => {
 		
 		render(<DateRangePicker onFilter={mockOnFilter} />);
 
-		const fromInput = screen.getByLabelText(/du/i);
-		const toInput = screen.getByLabelText(/au/i);
-		const filterButton = screen.getByRole('button', { name: /filtrer/i });
+		const fromInput = screen.getByLabelText(/from/i);
+		const toInput = screen.getByLabelText(/to/i);
+		const filterButton = screen.getByRole('button', { name: /filter/i });
 
 		await user.type(fromInput, '2024-01-01');
 		await user.type(toInput, '2024-01-31');
@@ -37,7 +37,7 @@ describe('DateRangePicker Component', () => {
 		
 		render(<DateRangePicker onFilter={mockOnFilter} />);
 
-		const resetButton = screen.getByRole('button', { name: /réinitialiser/i });
+		const resetButton = screen.getByRole('button', { name: /reset/i });
 		await user.click(resetButton);
 
 		expect(mockOnFilter).toHaveBeenCalledWith(undefined, undefined);
@@ -49,8 +49,8 @@ describe('DateRangePicker Component', () => {
 		
 		render(<DateRangePicker onFilter={mockOnFilter} />);
 
-		const fromInput = screen.getByLabelText(/du/i);
-		const filterButton = screen.getByRole('button', { name: /filtrer/i });
+		const fromInput = screen.getByLabelText(/from/i);
+		const filterButton = screen.getByRole('button', { name: /filter/i });
 
 		await user.type(fromInput, '2024-01-01');
 		await user.click(filterButton);
@@ -64,12 +64,12 @@ describe('DateRangePicker Component', () => {
 		
 		render(<DateRangePicker onFilter={mockOnFilter} />);
 
-		const fromInput = screen.getByLabelText(/du/i);
-		const filterButton = screen.getByRole('button', { name: /filtrer/i });
+		const fromInput = screen.getByLabelText(/from/i);
+		const filterButton = screen.getByRole('button', { name: /filter/i });
 
 		await user.type(fromInput, '2024-01-01');
 		await user.click(filterButton);
 
-		expect(screen.getByText(/veuillez sélectionner les deux dates/i)).toBeInTheDocument();
+		expect(screen.getByText(/please select both dates/i)).toBeInTheDocument();
 	});
 });

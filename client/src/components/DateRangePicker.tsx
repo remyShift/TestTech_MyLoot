@@ -13,7 +13,7 @@ export function DateRangePicker({ onFilter }: DateRangePickerProps) {
 		setError('');
 		
 		if ((fromDate && !toDate) || (!fromDate && toDate)) {
-			setError('Veuillez sélectionner les deux dates');
+			setError('Please select both dates');
 			return;
 		}
 		
@@ -31,12 +31,12 @@ export function DateRangePicker({ onFilter }: DateRangePickerProps) {
 
 	return (
 		<div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-			<h2 className="text-xl font-bold text-gray-800 mb-4">Filtrer par période</h2>
+			<h2 className="text-xl font-bold text-gray-800 mb-4">Filter by period</h2>
 			
 			<div className="flex flex-wrap items-end gap-4">
 				<div className="flex-1 min-w-48">
 					<label htmlFor="from-date" className="block text-sm font-medium text-gray-700 mb-1">
-						Du
+						From
 					</label>
 					<input
 						type="date"
@@ -49,7 +49,7 @@ export function DateRangePicker({ onFilter }: DateRangePickerProps) {
 				
 				<div className="flex-1 min-w-48">
 					<label htmlFor="to-date" className="block text-sm font-medium text-gray-700 mb-1">
-						Au
+						To
 					</label>
 					<input
 						type="date"
@@ -65,13 +65,13 @@ export function DateRangePicker({ onFilter }: DateRangePickerProps) {
 						onClick={handleFilter}
 						className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
 					>
-						Filtrer
+						Filter
 					</button>
 					<button
 						onClick={handleReset}
 						className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
 					>
-						Réinitialiser
+						Reset
 					</button>
 				</div>
 			</div>
