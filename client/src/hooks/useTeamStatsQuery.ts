@@ -1,15 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import type { TeamStats } from '@/types';
-
-const baseUrl = 'http://localhost:3000';
+import { API_CONFIG } from '@/config/api';
+import { AppError } from '@/types/errors';
 
 async function fetchTeamStats(
 	teamId: string,
 	from?: string,
 	to?: string
 ): Promise<TeamStats> {
-	let url = `${baseUrl}/teams/${teamId}/leaderboard`;
+	let url = `${API_CONFIG.baseUrl}/teams/${teamId}/leaderboard`;
 
 	if (from && to) {
 		url += `?from=${from}&to=${to}`;
@@ -18,13 +18,8 @@ async function fetchTeamStats(
 	return axios
 		.get<TeamStats>(url)
 		.then((response) => response.data)
-		.then((data) => data)
 		.catch((error) => {
-			if (error.response?.data?.message) {
-				const backendError = new Error(error.response.data.message);
-				throw backendError;
-			}
-			throw error;
+			throw AppError.fromResponse(error);
 		});
 }
 
