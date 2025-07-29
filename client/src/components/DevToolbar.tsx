@@ -3,7 +3,6 @@ import { useState } from 'react';
 export function DevToolbar() {
 	const [isOpen, setIsOpen] = useState(false);
 
-	// Ne pas afficher en production
 	if (import.meta.env.PROD) {
 		return null;
 	}

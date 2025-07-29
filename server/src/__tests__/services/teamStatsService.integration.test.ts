@@ -37,7 +37,6 @@ describe('TeamStatsService integration', () => {
 	});
 
 	it('should sort and calculate total and percentages correctly when team has users with earnings', async () => {
-		// Create data without transaction to ensure it's committed
 		const team = await testPrisma.team.create({ data: { name: 'Blue' } });
 
 		const user1 = await testPrisma.user.create({

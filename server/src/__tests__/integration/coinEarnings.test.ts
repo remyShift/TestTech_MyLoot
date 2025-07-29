@@ -19,7 +19,6 @@ describe('POST /coin_earnings - Integration Tests', () => {
 	});
 
 	it('should create a coin earning and return 201', async () => {
-		// Créer une équipe et un utilisateur de test
 		const team = await testPrisma.team.create({
 			data: {
 				name: 'Test Team',
@@ -48,7 +47,6 @@ describe('POST /coin_earnings - Integration Tests', () => {
 		expect(response.body.id).toBeDefined();
 		expect(response.body.date).toBeDefined();
 
-		// Vérifier que l'earning a bien été créé en base
 		const coinEarning = await testPrisma.coinEarning.findFirst({
 			where: { userId: user.id },
 		});

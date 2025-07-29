@@ -15,8 +15,17 @@ async function fetchTeamStats(
 		url += `?from=${from}&to=${to}`;
 	}
 
-	const response = await axios.get<TeamStats>(url);
-	return response.data;
+	return axios
+		.get<TeamStats>(url)
+		.then((response) => response.data)
+		.then((data) => data)
+		.catch((error) => {
+			if (error.response?.data?.message) {
+				const backendError = new Error(error.response.data.message);
+				throw backendError;
+			}
+			throw error;
+		});
 }
 
 export function useTeamStatsQuery(teamId: string, from?: string, to?: string) {

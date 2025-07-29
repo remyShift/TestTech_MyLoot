@@ -1,15 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactNode } from 'react';
-import { TeamPage } from '../TeamPage';
-import { useTeamStatsQuery } from '../../hooks/useTeamStatsQuery';
+import type { ReactNode } from 'react';
+import { TeamPage } from '@/pages/TeamPage';
+import { useTeamStatsQuery } from '@/hooks/useTeamStatsQuery';
 
-// Mock du hook
-vi.mock('../../hooks/useTeamStatsQuery');
+vi.mock('@/hooks/useTeamStatsQuery');
 const mockUseTeamStatsQuery = vi.mocked(useTeamStatsQuery);
 
-// Wrapper pour React Query
 function createWrapper() {
 	const queryClient = new QueryClient({
 		defaultOptions: {
@@ -26,7 +24,6 @@ function createWrapper() {
 	);
 }
 
-// Mock React Router
 const mockParams = { id: '1' };
 vi.mock('react-router-dom', () => ({
 	useParams: () => mockParams,
@@ -46,7 +43,7 @@ describe('TeamPage Component', () => {
 
 		render(<TeamPage />, { wrapper: createWrapper() });
 
-		expect(screen.getByText('Chargement...')).toBeInTheDocument();
+		expect(screen.getByText('Loading...')).toBeInTheDocument();
 	});
 
 	it('should display error message when there is an error', () => {
@@ -59,7 +56,7 @@ describe('TeamPage Component', () => {
 		render(<TeamPage />, { wrapper: createWrapper() });
 
 		expect(screen.getByText('Team not found')).toBeInTheDocument();
-		expect(screen.getByText('Équipe introuvable')).toBeInTheDocument();
+		expect(screen.getByText('Team not found')).toBeInTheDocument();
 	});
 
 	it('should display team stats and members when data is loaded', async () => {
@@ -112,6 +109,6 @@ describe('TeamPage Component', () => {
 		render(<TeamPage />, { wrapper: createWrapper() });
 
 		expect(screen.getByText('Total: 0 coins')).toBeInTheDocument();
-		expect(screen.getByText('Équipe vide')).toBeInTheDocument();
+		expect(screen.getByText('Team has no members')).toBeInTheDocument();
 	});
 });
