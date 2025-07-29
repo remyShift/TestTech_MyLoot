@@ -2,7 +2,7 @@ interface LoaderProps {
 	text?: string;
 }
 
-export function Loader({ text = 'Loading...' }: LoaderProps) {
+export function Loader({ text = 'Chargement...' }: LoaderProps) {
 	return (
 		<div className="flex flex-col items-center justify-center py-8">
 			<div 

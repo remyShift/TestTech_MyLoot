@@ -6,7 +6,7 @@ describe('Loader Component', () => {
 	it('should display loading spinner with text', () => {
 		render(<Loader />);
 
-		expect(screen.getByText('Loading...')).toBeInTheDocument();
+		expect(screen.getByText('Chargement...')).toBeInTheDocument();
 		expect(screen.getByRole('status')).toBeInTheDocument();
 	});
 
