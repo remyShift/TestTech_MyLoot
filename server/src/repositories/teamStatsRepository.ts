@@ -38,4 +38,37 @@ export class PrismaTeamStatsRepository implements TeamStatsRepository {
 			} as UserWithStats;
 		});
 	}
+
+	async getTeamMembersWithDateFilter(
+		teamId: number,
+		startDate: Date,
+		endDate: Date
+	): Promise<UserWithStats[]> {
+		const result = await this.prisma.team.findUnique({
+			where: { id: teamId },
+			include: {
+				users: {
+					include: {
+						coinEarnings: true,
+					},
+				},
+			},
+		});
+
+		if (!result) {
+			throw new NotFoundError(`Team with id ${teamId} doesn't exist`);
+		}
+
+		return result.users.map((user: User) => {
+			const { coinEarnings, ...userWithoutEarnings } = user;
+
+			return {
+				...userWithoutEarnings,
+				totalCoins: coinEarnings.reduce(
+					(sum: number, earning: CoinEarning) => sum + earning.amount,
+					0
+				),
+			} as UserWithStats;
+		});
+	}
 }

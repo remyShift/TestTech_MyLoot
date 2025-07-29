@@ -27,18 +27,6 @@ export class TeamStatsService {
 		};
 	}
 
-	async getRawStatsForTeam(teamId: number): Promise<TeamStats> {
-		const members = await this.teamStatsRepository.getTeamMembers(teamId);
-
-		return {
-			total: members.reduce(
-				(acc: number, member: UserWithStats) => acc + member.totalCoins,
-				0
-			),
-			members,
-		};
-	}
-
 	async getSortedStatsForTeam(teamId: number): Promise<TeamStats> {
 		const membersWithTotal = await this.getRawStatsForTeam(teamId);
 
@@ -49,6 +37,18 @@ export class TeamStatsService {
 		return {
 			total: membersWithTotal.total,
 			members: sortedMembers,
+		};
+	}
+
+	async getRawStatsForTeam(teamId: number): Promise<TeamStats> {
+		const members = await this.teamStatsRepository.getTeamMembers(teamId);
+
+		return {
+			total: members.reduce(
+				(acc: number, member: UserWithStats) => acc + member.totalCoins,
+				0
+			),
+			members,
 		};
 	}
 }

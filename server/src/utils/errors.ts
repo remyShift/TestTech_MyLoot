@@ -1,3 +1,5 @@
+import { Response } from 'express';
+
 export class ValidationError extends Error {
 	constructor(message: string) {
 		super(message);
@@ -13,7 +15,7 @@ export class NotFoundError extends Error {
 }
 
 export class ErrorHandler {
-	static handleControllerError(error: Error, res: any): void {
+	static handleControllerError(error: Error, res: Response): void {
 		if (error instanceof ValidationError) {
 			res.status(400).json({ error: error.message });
 		} else if (error instanceof NotFoundError) {
