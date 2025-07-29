@@ -1,4 +1,4 @@
-import { UserWithStats } from '@/types/domain';
+import { UserWithStats, UserWithStatsAndPercent } from '@/types/domain';
 import { TeamStatsRepository } from '@/repositories/teamStatsRepository';
 import { TeamLeaderboard } from '@/types/api';
 
@@ -11,33 +11,51 @@ export class TeamStatsService {
 	constructor(private readonly teamStatsRepository: TeamStatsRepository) {}
 
 	async getTeamLeaderBoard(teamId: number): Promise<TeamLeaderboard> {
-		const membersWithTotal = await this.getSortedStatsForTeam(teamId);
+		const membersWithTotal = await this.getRawStatsForTeam(teamId);
 
 		const total = membersWithTotal.total;
 
-		const members = membersWithTotal.members.map((member) => ({
-			...member,
-			percent:
-				total === 0 ? 0 : Math.round((member.totalCoins / total) * 100),
-		}));
+		const members = await this.insertMembersPercent(
+			membersWithTotal.members
+		);
+
+		const sortedMembers = await this.sortMembersByTotalEarnings(members);
 
 		return {
 			total,
-			members,
+			members: sortedMembers,
 		};
 	}
 
-	async getSortedStatsForTeam(teamId: number): Promise<TeamStats> {
-		const membersWithTotal = await this.getRawStatsForTeam(teamId);
-
-		const sortedMembers = membersWithTotal.members.sort(
-			(a, b) => b.totalCoins - a.totalCoins
+	async getTeamLeaderBoardWithDateFilter(
+		teamId: number,
+		from: Date,
+		to: Date
+	): Promise<TeamLeaderboard> {
+		const membersWithTotal = await this.getRawStatsForTeamWithDateFilter(
+			teamId,
+			from,
+			to
 		);
 
+		const total = membersWithTotal.total;
+
+		const members = await this.insertMembersPercent(
+			membersWithTotal.members
+		);
+
+		const sortedMembers = await this.sortMembersByTotalEarnings(members);
+
 		return {
-			total: membersWithTotal.total,
+			total,
 			members: sortedMembers,
 		};
+	}
+
+	async sortMembersByTotalEarnings(
+		members: UserWithStatsAndPercent[]
+	): Promise<UserWithStatsAndPercent[]> {
+		return members.sort((a, b) => b.totalCoins - a.totalCoins);
 	}
 
 	async getRawStatsForTeam(teamId: number): Promise<TeamStats> {
@@ -50,5 +68,41 @@ export class TeamStatsService {
 			),
 			members,
 		};
+	}
+
+	async getRawStatsForTeamWithDateFilter(
+		teamId: number,
+		from: Date,
+		to: Date
+	): Promise<TeamStats> {
+		const members =
+			await this.teamStatsRepository.getTeamMembersWithDateFilter(
+				teamId,
+				from,
+				to
+			);
+
+		return {
+			total: members.reduce(
+				(acc: number, member: UserWithStats) => acc + member.totalCoins,
+				0
+			),
+			members,
+		};
+	}
+
+	private async insertMembersPercent(
+		members: UserWithStats[]
+	): Promise<UserWithStatsAndPercent[]> {
+		const total = members.reduce(
+			(acc: number, member: UserWithStats) => acc + member.totalCoins,
+			0
+		);
+
+		return members.map((member) => ({
+			...member,
+			percent:
+				total === 0 ? 0 : Math.round((member.totalCoins / total) * 100),
+		}));
 	}
 }

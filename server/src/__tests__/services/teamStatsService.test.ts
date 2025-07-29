@@ -77,34 +77,6 @@ describe('TeamStatsService', () => {
 		});
 	});
 
-	describe('getSortedStatsForTeam', () => {
-		it('should return members sorted by totalCoins', async () => {
-			class FakeRepo implements TeamStatsRepository {
-				async getTeamMembers() {
-					return [
-						{ id: 1, name: 'John', totalCoins: 10, teamId: 1 },
-						{ id: 2, name: 'Jane', totalCoins: 30, teamId: 1 },
-						{ id: 3, name: 'Joe', totalCoins: 10, teamId: 1 },
-					];
-				}
-
-				async getTeamMembersWithDateFilter() {
-					return [];
-				}
-			}
-
-			const service = new TeamStatsService(new FakeRepo());
-			const result = await service.getSortedStatsForTeam(1);
-
-			expect(result.total).toBe(50);
-			expect(result.members).toEqual([
-				{ id: 2, name: 'Jane', totalCoins: 30, teamId: 1 },
-				{ id: 1, name: 'John', totalCoins: 10, teamId: 1 },
-				{ id: 3, name: 'Joe', totalCoins: 10, teamId: 1 },
-			]);
-		});
-	});
-
 	describe('getTeamLeaderBoard', () => {
 		it('should return members sorted by totalCoins and include percent contribution', async () => {
 			class FakeRepo implements TeamStatsRepository {

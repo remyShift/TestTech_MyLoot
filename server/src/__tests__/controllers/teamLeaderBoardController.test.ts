@@ -15,6 +15,7 @@ describe('TeamLeaderBoardController', () => {
 
 			const req = Object.assign({} as Request, {
 				params: { id: 'toto' },
+				query: {},
 			});
 			const res = Object.assign({} as Response, {
 				status: jest.fn().mockReturnThis(),
@@ -42,6 +43,7 @@ describe('TeamLeaderBoardController', () => {
 
 			const req = Object.assign({} as Request, {
 				params: { id: '1' },
+				query: {},
 			});
 			const res = Object.assign({} as Response, {
 				status: jest.fn().mockReturnThis(),
@@ -85,6 +87,7 @@ describe('TeamLeaderBoardController', () => {
 
 			const req = Object.assign({} as Request, {
 				params: { id: '1' },
+				query: {},
 			});
 			const res = Object.assign({} as Response, {
 				status: jest.fn().mockReturnThis(),
@@ -129,6 +132,7 @@ describe('TeamLeaderBoardController', () => {
 
 			const req = Object.assign({} as Request, {
 				params: { id: '1' },
+				query: {},
 			});
 			const res = Object.assign({} as Response, {
 				status: jest.fn().mockReturnThis(),
@@ -142,6 +146,142 @@ describe('TeamLeaderBoardController', () => {
 				total: 0,
 				members: [],
 			});
+		});
+	});
+
+	describe('getLeaderboard with date filters', () => {
+		it('should return 400 when from date parameter is invalid', async () => {
+			const mockService = {
+				getTeamLeaderBoard: jest.fn(),
+				getTeamLeaderBoardWithDateFilter: jest.fn(),
+			} as unknown as TeamStatsService;
+
+			const controller = new TeamLeaderBoardController(mockService);
+
+			const req = Object.assign({} as Request, {
+				params: { id: '1' },
+				query: { from: 'invalid-date', to: '2024-01-31' },
+			});
+			const res = Object.assign({} as Response, {
+				status: jest.fn().mockReturnThis(),
+				json: jest.fn(),
+			});
+
+			await controller.getLeaderboard(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(400);
+			expect(res.json).toHaveBeenCalledWith({
+				error: 'Invalid date format for from parameter',
+			});
+		});
+
+		it('should return 400 when to date parameter is invalid', async () => {
+			const mockService = {
+				getTeamLeaderBoard: jest.fn(),
+				getTeamLeaderBoardWithDateFilter: jest.fn(),
+			} as unknown as TeamStatsService;
+
+			const controller = new TeamLeaderBoardController(mockService);
+
+			const req = Object.assign({} as Request, {
+				params: { id: '1' },
+				query: { from: '2024-01-01', to: 'invalid-date' },
+			});
+			const res = Object.assign({} as Response, {
+				status: jest.fn().mockReturnThis(),
+				json: jest.fn(),
+			});
+
+			await controller.getLeaderboard(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(400);
+			expect(res.json).toHaveBeenCalledWith({
+				error: 'Invalid date format for to parameter',
+			});
+		});
+
+		it('should return 200 with filtered data when both dates are provided', async () => {
+			const mockStats = {
+				total: 50,
+				members: [
+					{
+						id: 1,
+						name: 'Alice',
+						totalCoins: 30,
+						percent: 60,
+						teamId: 1,
+					},
+					{
+						id: 2,
+						name: 'Bob',
+						totalCoins: 20,
+						percent: 40,
+						teamId: 1,
+					},
+				],
+			};
+
+			const mockService = {
+				getTeamLeaderBoard: jest.fn(),
+				getTeamLeaderBoardWithDateFilter: jest
+					.fn()
+					.mockResolvedValue(mockStats),
+			} as unknown as TeamStatsService;
+
+			const controller = new TeamLeaderBoardController(mockService);
+
+			const req = Object.assign({} as Request, {
+				params: { id: '1' },
+				query: { from: '2024-01-01', to: '2024-01-31' },
+			});
+			const res = Object.assign({} as Response, {
+				status: jest.fn().mockReturnThis(),
+				json: jest.fn(),
+			});
+
+			await controller.getLeaderboard(req, res);
+
+			expect(
+				mockService.getTeamLeaderBoardWithDateFilter
+			).toHaveBeenCalledWith(
+				1,
+				new Date('2024-01-01'),
+				new Date('2024-01-31')
+			);
+			expect(res.status).toHaveBeenCalledWith(200);
+			expect(res.json).toHaveBeenCalledWith(mockStats);
+		});
+
+		it('should use non-filtered version when no date parameters provided', async () => {
+			const mockStats = {
+				total: 100,
+				members: [],
+			};
+
+			const mockService = {
+				getTeamLeaderBoard: jest.fn().mockResolvedValue(mockStats),
+				getTeamLeaderBoardWithDateFilter: jest.fn(),
+			} as unknown as TeamStatsService;
+
+			const controller = new TeamLeaderBoardController(mockService);
+
+			const req = Object.assign({} as Request, {
+				params: { id: '1' },
+				query: {},
+			});
+			const res = Object.assign({} as Response, {
+				status: jest.fn().mockReturnThis(),
+				json: jest.fn(),
+			});
+
+			await controller.getLeaderboard(req, res);
+
+			expect(mockService.getTeamLeaderBoard).toHaveBeenCalledWith(1);
+			expect(
+				mockService.getTeamLeaderBoardWithDateFilter
+			).not.toHaveBeenCalled();
+			expect(res.status).toHaveBeenCalledWith(200);
+			expect(res.json).toHaveBeenCalledWith(mockStats);
 		});
 	});
 });
