@@ -119,14 +119,6 @@ cd server && npm run dev
 cd client && npm run dev
 ```
 
-### **Environment Variables**
-
-```env
-# server/.env
-DATABASE_URL="postgresql://user:password@localhost:5432/myloot_db"
-PORT=3000
-```
-
 ---
 
 ## 📡 **API Endpoints**
@@ -294,34 +286,9 @@ npm run lint          # ESLint linting
 
 ---
 
-## 📈 **Possible Improvements**
-
-### **Short Term**
-
--   [ ] Team member pagination
--   [ ] API rate limiting
--   [ ] Environment variables for API URL
--   [ ] URL filters for sharing
-
-### **Medium Term**
-
--   [ ] Authentication & authorization
--   [ ] Websockets for real-time updates
--   [ ] Admin dashboard
--   [ ] Data export (CSV, PDF)
-
-### **Long Term**
-
--   [ ] GraphQL API for flexible queries
--   [ ] Microservices for scalability
--   [ ] Redis cache for performance
--   [ ] Monitoring & metrics
-
----
-
 ## 🏆 **Code Strengths**
 
--   **Hexagonal architecture**: Clear separation of responsibilities
+-   **Clean architecture**: Clear separation of responsibilities
 -   **Type Safety**: Strict TypeScript on front/back
 -   **Complete tests**: Unit and integration
 -   **Robust error handling**: Appropriate UX and logging
@@ -341,7 +308,6 @@ npm run lint          # ESLint linting
 
 ### **Debugging**
 
--   **Backend**: Structured logs with levels
 -   **Frontend**: DevToolbar with development tools
 -   **Database**: Prisma Studio for DB inspection
 
