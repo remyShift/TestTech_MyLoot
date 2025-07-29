@@ -1,11 +1,23 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTeamStatsQuery } from '../hooks/useTeamStatsQuery';
 import { Loader } from '../components/Loader';
 import { MemberRow } from '../components/MemberRow';
+import { DateRangePicker } from '../components/DateRangePicker';
 
 export function TeamPage() {
 	const { id } = useParams<{ id: string }>();
-	const { isLoading, data, error } = useTeamStatsQuery(id || '');
+	const [dateRange, setDateRange] = useState<{ from?: string; to?: string }>({});
+	
+	const { isLoading, data, error } = useTeamStatsQuery(
+		id || '', 
+		dateRange.from, 
+		dateRange.to
+	);
+
+	const handleDateFilter = (from?: string, to?: string) => {
+		setDateRange({ from, to });
+	};
 
 	if (isLoading) {
 		return <Loader />;
@@ -45,6 +57,8 @@ export function TeamPage() {
 						Total: {data.total} coins
 					</div>
 				</div>
+
+				<DateRangePicker onFilter={handleDateFilter} />
 
 				<div className="bg-white rounded-lg shadow-lg p-6">
 					<h2 className="text-2xl font-bold text-gray-800 mb-4">Classement des Membres</h2>
