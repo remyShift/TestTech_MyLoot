@@ -9,6 +9,7 @@ import ErrorCard from '@/components/cards/ErrorCard';
 import NoTeamState from '@/components/cards/NoTeamState';
 import HeaderTeamCard from '@/components/cards/HeaderTeamCard';
 import EmptyTeamState from '@/components/cards/EmptyTeamState';
+import CardTitle from '@/components/cards/CardTitle';
 
 export function TeamPage() {
 	const { id } = useParams<{ id: string }>();
@@ -44,7 +45,7 @@ export function TeamPage() {
 				<DateRangePicker onFilter={handleDateFilter} />
 
 				<div className="bg-white rounded-lg shadow-lg p-6">
-					<h2 className="text-2xl font-bold text-gray-800 mb-4">Members ranking</h2>
+					<CardTitle title="Members ranking" />
 					
 					{data.members.length === 0 ? (
 						<EmptyTeamState dateRange={dateRange} setDateRange={setDateRange} />

@@ -89,7 +89,7 @@ describe('TeamPage Error Cases', () => {
 		render(<TeamPage />, { wrapper: createWrapper() });
 
 		expect(screen.getByText('Team has no members')).toBeInTheDocument();
-		expect(screen.getByText('Total: 0 coins')).toBeInTheDocument();
+		expect(screen.getByText('Total : 0 coins')).toBeInTheDocument();
 		expect(screen.getByText('Team statistics')).toBeInTheDocument();
 	});
 

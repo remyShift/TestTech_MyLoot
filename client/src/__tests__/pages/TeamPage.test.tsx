@@ -88,7 +88,7 @@ describe('TeamPage Component', () => {
 		render(<TeamPage />, { wrapper: createWrapper() });
 
 		expect(screen.getByText('Team statistics')).toBeInTheDocument();
-		expect(screen.getByText('Total: 100 coins')).toBeInTheDocument();
+		expect(screen.getByText('Total : 100 coins')).toBeInTheDocument();
 		expect(screen.getByText('Alice')).toBeInTheDocument();
 		expect(screen.getByText('Bob')).toBeInTheDocument();
 	});
@@ -107,7 +107,7 @@ describe('TeamPage Component', () => {
 
 		render(<TeamPage />, { wrapper: createWrapper() });
 
-		expect(screen.getByText('Total: 0 coins')).toBeInTheDocument();
+		expect(screen.getByText('Total : 0 coins')).toBeInTheDocument();
 		expect(screen.getByText('Team has no members')).toBeInTheDocument();
 	});
 });
