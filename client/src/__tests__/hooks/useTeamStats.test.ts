@@ -1,9 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
-import { useTeamStats } from '../useTeamStats';
+import { useTeamStats } from '@/hooks/useTeamStats';
 import axios from 'axios';
 
-// Mock axios
 vi.mock('axios');
 const mockedAxios = vi.mocked(axios);
 
@@ -51,7 +50,9 @@ describe('useTeamStats Hook', () => {
 
 		expect(result.current.data).toEqual(mockData);
 		expect(result.current.error).toBe(null);
-		expect(mockedAxios.get).toHaveBeenCalledWith('http://localhost:3000/teams/1/leaderboard');
+		expect(mockedAxios.get).toHaveBeenCalledWith(
+			'http://localhost:3000/teams/1/leaderboard'
+		);
 	});
 
 	it('should fetch team stats with date range', async () => {
@@ -70,7 +71,7 @@ describe('useTeamStats Hook', () => {
 
 		mockedAxios.get.mockResolvedValueOnce({ data: mockData });
 
-		const { result } = renderHook(() => 
+		const { result } = renderHook(() =>
 			useTeamStats('1', '2024-01-01', '2024-01-31')
 		);
 

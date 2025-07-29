@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { TeamStats } from '../types/index';
+import type { TeamStats } from '@/types';
 
 interface UseTeamStatsResult {
 	isLoading: boolean;
@@ -24,7 +24,7 @@ export function useTeamStats(
 
 			try {
 				let url = `http://localhost:3000/teams/${teamId}/leaderboard`;
-				
+
 				if (from && to) {
 					url += `?from=${from}&to=${to}`;
 				}
