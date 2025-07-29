@@ -152,5 +152,20 @@ describe('PrismaTeamStatsRepository', () => {
 				{ ...user, totalCoins: 100, teamId: team.id },
 			]);
 		});
+
+		it('should return an empty array when team has no users', async () => {
+			const team = await testPrisma.team.create({
+				data: { name: 'Red' },
+			});
+
+			const repo = new PrismaTeamStatsRepository(testPrisma);
+			const result = await repo.getTeamMembersWithDateFilter(
+				team.id,
+				new Date('2024-01-10'),
+				new Date('2024-01-20')
+			);
+
+			expect(result).toEqual([]);
+		});
 	});
 });

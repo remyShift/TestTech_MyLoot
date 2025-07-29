@@ -11,22 +11,9 @@ export class PrismaTeamStatsRepository implements TeamStatsRepository {
 	constructor(private readonly prisma: PrismaClient) {}
 
 	async getTeamMembers(teamId: number): Promise<UserWithStats[]> {
-		const result = await this.prisma.team.findUnique({
-			where: { id: teamId },
-			include: {
-				users: {
-					include: {
-						coinEarnings: true,
-					},
-				},
-			},
-		});
+		const users = await this.getUsers(teamId);
 
-		if (!result) {
-			throw new NotFoundError(`Team with id ${teamId} doesn't exist`);
-		}
-
-		return result.users.map((user: User) => {
+		return users.map((user: User) => {
 			const { coinEarnings, ...userWithoutEarnings } = user;
 
 			return {
@@ -44,6 +31,34 @@ export class PrismaTeamStatsRepository implements TeamStatsRepository {
 		startDate: Date,
 		endDate: Date
 	): Promise<UserWithStats[]> {
+		const users = await this.getUsersWithEarningsInDateRange(
+			teamId,
+			startDate,
+			endDate
+		);
+
+		if (!users) {
+			throw new NotFoundError(`Team with id ${teamId} doesn't exist`);
+		}
+
+		return users.map((user: User) => {
+			const { coinEarnings, ...userWithoutEarnings } = user;
+
+			return {
+				...userWithoutEarnings,
+				totalCoins: coinEarnings.reduce(
+					(sum: number, earning: CoinEarning) => sum + earning.amount,
+					0
+				),
+			} as UserWithStats;
+		});
+	}
+
+	private async getUsersWithEarningsInDateRange(
+		teamId: number,
+		startDate: Date,
+		endDate: Date
+	): Promise<User[]> {
 		const result = await this.prisma.team.findUnique({
 			where: { id: teamId },
 			include: {
@@ -66,16 +81,25 @@ export class PrismaTeamStatsRepository implements TeamStatsRepository {
 			throw new NotFoundError(`Team with id ${teamId} doesn't exist`);
 		}
 
-		return result.users.map((user: User) => {
-			const { coinEarnings, ...userWithoutEarnings } = user;
+		return result.users;
+	}
 
-			return {
-				...userWithoutEarnings,
-				totalCoins: coinEarnings.reduce(
-					(sum: number, earning: CoinEarning) => sum + earning.amount,
-					0
-				),
-			} as UserWithStats;
+	private async getUsers(teamId: number): Promise<User[]> {
+		const result = await this.prisma.team.findUnique({
+			where: { id: teamId },
+			include: {
+				users: {
+					include: {
+						coinEarnings: true,
+					},
+				},
+			},
 		});
+
+		if (!result) {
+			throw new NotFoundError(`Team with id ${teamId} doesn't exist`);
+		}
+
+		return result.users;
 	}
 }
