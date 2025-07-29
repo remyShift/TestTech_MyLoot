@@ -17,7 +17,7 @@ datasource db {
 
 model Team {
   id    Int    @id @default(autoincrement())
-  name  String
+  name  String @unique
   users User[]
 }
 
@@ -39,4 +39,5 @@ model CoinEarning {
   date   DateTime @default(now())
 
   @@index([userId, date])
+  @@index([date])
 }
