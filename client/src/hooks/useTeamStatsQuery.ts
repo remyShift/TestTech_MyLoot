@@ -1,15 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import type { TeamStats } from '../types/index';
+import type { TeamStats } from '@/types';
 
-// Service pour récupérer les stats d'équipe
 async function fetchTeamStats(
 	teamId: string,
 	from?: string,
 	to?: string
 ): Promise<TeamStats> {
 	let url = `http://localhost:3000/teams/${teamId}/leaderboard`;
-	
+
 	if (from && to) {
 		url += `?from=${from}&to=${to}`;
 	}
@@ -18,12 +17,7 @@ async function fetchTeamStats(
 	return response.data;
 }
 
-// Hook personnalisé utilisant React Query
-export function useTeamStatsQuery(
-	teamId: string,
-	from?: string,
-	to?: string
-) {
+export function useTeamStatsQuery(teamId: string, from?: string, to?: string) {
 	return useQuery({
 		queryKey: ['teamStats', teamId, from, to],
 		queryFn: () => fetchTeamStats(teamId, from, to),
