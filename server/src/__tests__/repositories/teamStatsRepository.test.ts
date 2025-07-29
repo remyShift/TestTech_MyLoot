@@ -99,7 +99,7 @@ describe('PrismaTeamStatsRepository', () => {
 			await disconnectTestPrisma();
 		});
 
-		it('should return team members without earnings within date range with a total of 0', async () => {
+		it('should return team members without earnings in date range with a total of 0', async () => {
 			const team = await testPrisma.team.create({
 				data: { name: 'Red' },
 			});
@@ -116,6 +116,40 @@ describe('PrismaTeamStatsRepository', () => {
 
 			expect(result).toEqual([
 				{ ...user, totalCoins: 0, teamId: team.id },
+			]);
+		});
+
+		it('should return team members with earnings in date range', async () => {
+			const team = await testPrisma.team.create({
+				data: { name: 'Red' },
+			});
+			const user = await testPrisma.user.create({
+				data: { name: 'John', teamId: team.id },
+			});
+
+			const earlyDate = new Date('2024-01-01');
+			const targetDate = new Date('2024-01-15');
+			const lateDate = new Date('2024-02-01');
+
+			await testPrisma.coinEarning.create({
+				data: { amount: 50, userId: user.id, date: earlyDate },
+			});
+			await testPrisma.coinEarning.create({
+				data: { amount: 100, userId: user.id, date: targetDate },
+			});
+			await testPrisma.coinEarning.create({
+				data: { amount: 75, userId: user.id, date: lateDate },
+			});
+
+			const repo = new PrismaTeamStatsRepository(testPrisma);
+			const result = await repo.getTeamMembersWithDateFilter(
+				team.id,
+				new Date('2024-01-10'),
+				new Date('2024-01-20')
+			);
+
+			expect(result).toEqual([
+				{ ...user, totalCoins: 100, teamId: team.id },
 			]);
 		});
 	});

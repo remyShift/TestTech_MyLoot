@@ -49,7 +49,14 @@ export class PrismaTeamStatsRepository implements TeamStatsRepository {
 			include: {
 				users: {
 					include: {
-						coinEarnings: true,
+						coinEarnings: {
+							where: {
+								date: {
+									gte: startDate,
+									lte: endDate,
+								},
+							},
+						},
 					},
 				},
 			},
