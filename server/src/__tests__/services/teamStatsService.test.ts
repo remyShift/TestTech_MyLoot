@@ -13,6 +13,14 @@ describe('TeamStatsService', () => {
 				async getTeamMembersWithDateFilter() {
 					return [];
 				}
+
+				async getTeamMembersCount() {
+					return 0;
+				}
+
+				async getTeamMembersCountWithDateFilter() {
+					return 0;
+				}
 			}
 
 			const fakeRepo = new FakeRepo();
@@ -35,6 +43,14 @@ describe('TeamStatsService', () => {
 
 				async getTeamMembersWithDateFilter() {
 					return [];
+				}
+
+				async getTeamMembersCount() {
+					return 2;
+				}
+
+				async getTeamMembersCountWithDateFilter() {
+					return 0;
 				}
 			}
 
@@ -62,6 +78,14 @@ describe('TeamStatsService', () => {
 				async getTeamMembersWithDateFilter() {
 					return [];
 				}
+
+				async getTeamMembersCount() {
+					return 2;
+				}
+
+				async getTeamMembersCountWithDateFilter() {
+					return 0;
+				}
 			}
 
 			const fakeRepo = new FakeRepo();
@@ -78,30 +102,57 @@ describe('TeamStatsService', () => {
 	});
 
 	describe('getTeamLeaderBoard', () => {
-		it('should return members sorted by totalCoins and include percent contribution', async () => {
+		it('should sort members from highest to lowest earnings and add percentages', async () => {
 			class FakeRepo implements TeamStatsRepository {
 				async getTeamMembers() {
 					return [
-						{ id: 1, name: 'John', totalCoins: 10, teamId: 1 },
-						{ id: 2, name: 'Jane', totalCoins: 30, teamId: 1 },
-						{ id: 3, name: 'Joe', totalCoins: 10, teamId: 1 },
+						{ id: 1, name: 'John Doe', totalCoins: 10, teamId: 1 },
+						{ id: 2, name: 'Jane Doe', totalCoins: 40, teamId: 1 },
+						{ id: 3, name: 'Bob Smith', totalCoins: 50, teamId: 1 },
 					];
 				}
 
 				async getTeamMembersWithDateFilter() {
 					return [];
 				}
+
+				async getTeamMembersCount() {
+					return 3;
+				}
+
+				async getTeamMembersCountWithDateFilter() {
+					return 0;
+				}
 			}
 
 			const service = new TeamStatsService(new FakeRepo());
 			const result = await service.getTeamLeaderBoard(1);
 
-			expect(result.total).toBe(50);
+			expect(result.total).toBe(100);
 			expect(result.members).toEqual([
-				{ id: 2, name: 'Jane', totalCoins: 30, percent: 60, teamId: 1 },
-				{ id: 1, name: 'John', totalCoins: 10, percent: 20, teamId: 1 },
-				{ id: 3, name: 'Joe', totalCoins: 10, percent: 20, teamId: 1 },
+				{
+					id: 3,
+					name: 'Bob Smith',
+					totalCoins: 50,
+					teamId: 1,
+					percent: 50,
+				},
+				{
+					id: 2,
+					name: 'Jane Doe',
+					totalCoins: 40,
+					teamId: 1,
+					percent: 40,
+				},
+				{
+					id: 1,
+					name: 'John Doe',
+					totalCoins: 10,
+					teamId: 1,
+					percent: 10,
+				},
 			]);
+			expect(result.pagination).toBeUndefined();
 		});
 	});
 });

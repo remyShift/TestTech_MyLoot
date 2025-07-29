@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { UserWithStats } from '@/types/domain';
-import { CoinEarning, User } from '@/types/models';
+import { CoinEarning, Team, User } from '@/types/models';
 import { NotFoundError } from '@/utils/errors';
 
 export interface TeamStatsRepository {
@@ -8,8 +8,16 @@ export interface TeamStatsRepository {
 	getTeamMembersWithDateFilter(
 		teamId: number,
 		startDate: Date,
-		endDate: Date
+		endDate: Date,
+		page?: number,
+		limit?: number
 	): Promise<UserWithStats[]>;
+	getTeamMembersCount(teamId: number): Promise<number>;
+	getTeamMembersCountWithDateFilter(
+		teamId: number,
+		startDate: Date,
+		endDate: Date
+	): Promise<number>;
 }
 
 export class PrismaTeamStatsRepository implements TeamStatsRepository {
@@ -34,12 +42,16 @@ export class PrismaTeamStatsRepository implements TeamStatsRepository {
 	async getTeamMembersWithDateFilter(
 		teamId: number,
 		startDate: Date,
-		endDate: Date
+		endDate: Date,
+		page?: number,
+		limit?: number
 	): Promise<UserWithStats[]> {
 		const users = await this.getUsersWithEarningsInDateRange(
 			teamId,
 			startDate,
-			endDate
+			endDate,
+			page,
+			limit
 		);
 
 		if (!users) {
@@ -62,25 +74,50 @@ export class PrismaTeamStatsRepository implements TeamStatsRepository {
 	private async getUsersWithEarningsInDateRange(
 		teamId: number,
 		startDate: Date,
-		endDate: Date
+		endDate: Date,
+		page?: number,
+		limit?: number
 	): Promise<User[]> {
-		const result = await this.prisma.team.findUnique({
-			where: { id: teamId },
-			include: {
-				users: {
-					include: {
-						coinEarnings: {
-							where: {
-								date: {
-									gte: startDate,
-									lte: endDate,
+		let result: Team | undefined;
+		if (page && limit) {
+			result = (await this.prisma.team.findUnique({
+				where: { id: teamId },
+				include: {
+					users: {
+						skip: (page - 1) * limit,
+						take: limit,
+						include: {
+							coinEarnings: {
+								where: {
+									date: {
+										gte: startDate,
+										lte: endDate,
+									},
 								},
 							},
 						},
 					},
 				},
-			},
-		});
+			})) as Team;
+		} else {
+			result = (await this.prisma.team.findUnique({
+				where: { id: teamId },
+				include: {
+					users: {
+						include: {
+							coinEarnings: {
+								where: {
+									date: {
+										gte: startDate,
+										lte: endDate,
+									},
+								},
+							},
+						},
+					},
+				},
+			})) as Team;
+		}
 
 		if (!result) {
 			throw new NotFoundError(`Team with id ${teamId} doesn't exist`);
@@ -106,5 +143,50 @@ export class PrismaTeamStatsRepository implements TeamStatsRepository {
 		}
 
 		return result.users;
+	}
+
+	async getTeamMembersCount(teamId: number): Promise<number> {
+		const result = await this.prisma.team.findUnique({
+			where: { id: teamId },
+			include: {
+				users: true,
+			},
+		});
+
+		if (!result) {
+			throw new NotFoundError(`Team with id ${teamId} doesn't exist`);
+		}
+
+		return result.users.length;
+	}
+
+	async getTeamMembersCountWithDateFilter(
+		teamId: number,
+		startDate: Date,
+		endDate: Date
+	): Promise<number> {
+		const result = await this.prisma.team.findUnique({
+			where: { id: teamId },
+			include: {
+				users: {
+					include: {
+						coinEarnings: {
+							where: {
+								date: {
+									gte: startDate,
+									lte: endDate,
+								},
+							},
+						},
+					},
+				},
+			},
+		});
+
+		if (!result) {
+			throw new NotFoundError(`Team with id ${teamId} doesn't exist`);
+		}
+
+		return result.users.length;
 	}
 }
